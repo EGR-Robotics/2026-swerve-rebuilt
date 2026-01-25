@@ -1,0 +1,147 @@
+package frc.robot.subsystems;
+
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import org.littletonrobotics.junction.Logger;
+
+public class Module {
+
+    private SparkMax drivingSparkMax;
+    private SparkMax turningSparkMax;
+    private final AbsoluteEncoder turningEncoder;
+    private final RelativeEncoder drivingEncoder;
+    private final SparkClosedLoopController drivingPID;
+    private final SparkClosedLoopController turningPID;
+    private SwerveModuleState desiredState;
+    private static final double DRIVE_GEAR_RATIO = 5.9;
+    private int corner;
+
+    public static final double FF = 2.54447;
+    // ka = 0.453207
+
+
+    public Module(int corner) {
+        switch (corner) {
+            case 0 -> {
+                drivingSparkMax = new SparkMax(19, MotorType.kBrushless);
+                turningSparkMax = new SparkMax(18, MotorType.kBrushless);
+            }
+            case 1 -> {
+                drivingSparkMax = new SparkMax(29, MotorType.kBrushless);
+                turningSparkMax = new SparkMax(28, MotorType.kBrushless);
+            }
+            case 2 -> {
+                drivingSparkMax = new SparkMax(11, MotorType.kBrushless);
+                turningSparkMax = new SparkMax(12, MotorType.kBrushless);
+            }
+            case 3 -> {
+                drivingSparkMax = new SparkMax(21, MotorType.kBrushless);
+                turningSparkMax = new SparkMax(22, MotorType.kBrushless);
+            }
+        }
+
+        this.corner = corner;
+
+        drivingEncoder = drivingSparkMax.getEncoder();
+        turningEncoder = turningSparkMax.getAbsoluteEncoder();
+        drivingPID = drivingSparkMax.getClosedLoopController();
+        turningPID = turningSparkMax.getClosedLoopController();
+
+        SparkMaxConfig drivingConfig = new SparkMaxConfig();
+        drivingConfig
+                .idleMode(IdleMode.kCoast)
+                .inverted(true)
+                .smartCurrentLimit(40)
+                .voltageCompensation(12);
+
+                drivingConfig.closedLoop .pidf(0.5, 0, 0, 0) .outputRange(-1, 1);
+
+
+        drivingConfig.encoder
+                .positionConversionFactor(1. / DRIVE_GEAR_RATIO * Units.inchesToMeters(4 * Math.PI))
+                .velocityConversionFactor(1. / DRIVE_GEAR_RATIO * Units.inchesToMeters(4 * Math.PI) / 60.);
+
+
+        SparkMaxConfig turningConfig = new SparkMaxConfig();
+        turningConfig
+                .idleMode(IdleMode.kBrake)
+                .inverted(false)
+                .smartCurrentLimit(30)
+                .voltageCompensation(12);
+
+        turningConfig.closedLoop
+                .pidf(2, 0, 0, 0)
+                .positionWrappingEnabled(true)
+                .positionWrappingInputRange(0, 2 * Math.PI)
+                .outputRange(-1, 1);
+
+        turningConfig.absoluteEncoder
+                .positionConversionFactor(Units.rotationsToRadians(1))
+                .inverted(true);
+
+
+        System.out.println(drivingSparkMax.getDeviceId() + " driving " + drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+        System.out.println(turningSparkMax.getDeviceId() + " turning " + turningSparkMax.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+
+        desiredState = new SwerveModuleState(0, new Rotation2d(turningEncoder.getPosition()));
+
+    }
+
+
+    public void setDesiredState(SwerveModuleState targetState, boolean shouldTurn) {
+        desiredState = SwerveModuleState.optimize(targetState, new Rotation2d(turningEncoder.getPosition()));
+
+        drivingPID.setReference(desiredState.speedMetersPerSecond, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
+                desiredState.speedMetersPerSecond * FF, SparkClosedLoopController.ArbFFUnits.kVoltage);
+        if (shouldTurn) {
+            turningPID.setReference(desiredState.angle.getRadians(), ControlType.kPosition);
+        }
+
+        Logger.recordOutput("Drive/Module" + corner + "/DriveCurrent", drivingSparkMax.getOutputCurrent());
+        Logger.recordOutput("Drive/Module" + corner + "/DriveVoltage", drivingSparkMax.getAppliedOutput() * drivingSparkMax.getBusVoltage());
+        Logger.recordOutput("Drive/Module" + corner + "/DriveVelocity", drivingEncoder.getVelocity());
+        Logger.recordOutput("Drive/Module" + corner + "/DrivePosition", drivingEncoder.getPosition());
+
+        Logger.recordOutput("Drive/Module" + corner + "/TurnCurrent", turningSparkMax.getOutputCurrent());
+        Logger.recordOutput("Drive/Module" + corner + "/TurnVoltage", turningSparkMax.getAppliedOutput() * turningSparkMax.getBusVoltage());
+        Logger.recordOutput("Drive/Module" + corner + "/TurnPosition", turningEncoder.getPosition());
+        Logger.recordOutput("Drive/Module" + corner + "/TurnVelocity", turningEncoder.getVelocity());
+
+        Logger.recordOutput("Drive/Module" + corner + "/DesiredSpeed", desiredState.speedMetersPerSecond);
+        Logger.recordOutput("Drive/Module" + corner + "/DesiredAngle", desiredState.angle);
+    }
+
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(drivingEncoder.getVelocity(), new Rotation2d(turningEncoder.getPosition()));
+    }
+
+    public SwerveModulePosition getPosition() {
+        return new SwerveModulePosition(drivingEncoder.getPosition(), new Rotation2d(turningEncoder.getPosition()));
+    }
+
+
+    public void setIdleMode(IdleMode idleMode) {
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.idleMode(idleMode);
+        drivingSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        turningSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    public double getDriveVoltage() {
+        return drivingSparkMax.getAppliedOutput() * drivingSparkMax.getBusVoltage();
+    }
+
+}
