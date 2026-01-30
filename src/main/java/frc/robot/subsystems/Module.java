@@ -44,12 +44,12 @@ public class Module {
                 turningSparkMax = new SparkMax(28, MotorType.kBrushless);
             }
             case 2 -> {
-                drivingSparkMax = new SparkMax(11, MotorType.kBrushless);
-                turningSparkMax = new SparkMax(12, MotorType.kBrushless);
-            }
-            case 3 -> {
                 drivingSparkMax = new SparkMax(21, MotorType.kBrushless);
                 turningSparkMax = new SparkMax(22, MotorType.kBrushless);
+            }
+            case 3 -> {
+                drivingSparkMax = new SparkMax(11, MotorType.kBrushless);
+                turningSparkMax = new SparkMax(12, MotorType.kBrushless);
             }
         }
 

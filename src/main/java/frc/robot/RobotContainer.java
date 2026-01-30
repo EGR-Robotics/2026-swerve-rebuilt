@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ShootWhileMoving;
-import frc.robot.subsystems.Climb;
+// import frc.robot.commands.ShootWhileMoving;
+// import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
+// import frc.robot.subsystems.Intake;
+// import frc.robot.subsystems.Shooter;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
@@ -34,14 +34,14 @@ import static frc.robot.Utils.getSpeed2;
 public class RobotContainer {
 
     private final Drive drive = new Drive();
-    private final Shooter shooter = new Shooter();
-    private final Climb climb = new Climb(drive);
-    private final Intake intake = new Intake();
+    // private final Shooter shooter = new Shooter();
+    // private final Climb climb = new Climb(drive);
+    // private final Intake intake = new Intake();
 
 
     private final CommandXboxController m_driverController = new CommandXboxController(0);
 
-    private final Command shootCommand = new ShootWhileMoving(drive, shooter, m_driverController, intake);
+    // private final Command shootCommand = new ShootWhileMoving(drive, shooter, m_driverController, intake);
 
 
     private Future<PathPlannerPath> onTheFlyPath = null;
@@ -132,21 +132,21 @@ public class RobotContainer {
 
         m_driverController.start().onTrue(Commands.runOnce(drive::zeroPose, drive));
 
-        m_driverController.leftTrigger().and(intake::isExtended).whileTrue(intake.intake());
-        m_driverController.rightBumper().and(intake::isExtended).whileTrue(intake.outtake());
-        m_driverController.leftBumper().onTrue(intake.toggleIntake());
+        // m_driverController.leftTrigger().and(intake::isExtended).whileTrue(intake.intake());
+        // m_driverController.rightBumper().and(intake::isExtended).whileTrue(intake.outtake());
+        // m_driverController.leftBumper().onTrue(intake.toggleIntake());
 
-        m_driverController.rightTrigger().whileTrue(Commands.parallel(shootCommand));
+        // m_driverController.rightTrigger().whileTrue(Commands.parallel(shootCommand));
 
-        m_driverController.a().whileTrue(Commands.run(
-                () -> {
-                    boolean isAtSpeed = shooter.isAtSpeed(1700);
-                    shooter.setShooterSpeed(1700, false);
-                    shooter.setFiring(isAtSpeed);
-                }, shooter
-        ));
+        // m_driverController.a().whileTrue(Commands.run(
+        //         () -> {
+        //             boolean isAtSpeed = shooter.isAtSpeed(1700);
+        //             shooter.setShooterSpeed(1700, false);
+        //             shooter.setFiring(isAtSpeed);
+        //         }, shooter
+        // ));
 
-        m_driverController.b().whileTrue(Commands.run(() -> shooter.setFiring(true)));
+        // m_driverController.b().whileTrue(Commands.run(() -> shooter.setFiring(true)));
 
 
 //        m_driverController.a().whileTrue(Commands.sequence(
@@ -167,14 +167,14 @@ public class RobotContainer {
 //                climb.fixPIDPositionReference(drive.getGyroPitch().getRadians())
 //        ));
 
-        m_driverController.povLeft().onTrue(climb.extend(false));
-        m_driverController.povUp().whileTrue(climb.setVoltageWithFeedforward(12, drive, true)
-                .alongWith(climb.extend(true)));
-        m_driverController.povDown().onTrue(Commands.run(() -> {
-            shooter.setFiring(false);
-            shooter.setShooterSpeed(0, false);
-        }, shooter));
-        m_driverController.povDown().whileTrue(climb.setVoltageWithFeedforward(-7, drive, false));
+        // m_driverController.povLeft().onTrue(climb.extend(false));
+        // m_driverController.povUp().whileTrue(climb.setVoltageWithFeedforward(12, drive, true)
+        //         .alongWith(climb.extend(true)));
+        // m_driverController.povDown().onTrue(Commands.run(() -> {
+        //     shooter.setFiring(false);
+        //     shooter.setShooterSpeed(0, false);
+        // }, shooter));
+        // m_driverController.povDown().whileTrue(climb.setVoltageWithFeedforward(-7, drive, false));
 
     }
 
