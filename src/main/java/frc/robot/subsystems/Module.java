@@ -1,147 +1,126 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import org.littletonrobotics.junction.Logger;
 
 public class Module {
 
-    private SparkMax drivingSparkMax;
-    private SparkMax turningSparkMax;
-    private final AbsoluteEncoder turningEncoder;
-    private final RelativeEncoder drivingEncoder;
-    private final SparkClosedLoopController drivingPID;
-    private final SparkClosedLoopController turningPID;
-    private SwerveModuleState desiredState;
+    private final TalonFX driveMotor;
+    private final TalonFX turnMotor;
+
+    private final VelocityVoltage driveRequest = new VelocityVoltage(0);
+    private final PositionVoltage turnRequest = new PositionVoltage(0);
+
     private static final double DRIVE_GEAR_RATIO = 5.9;
-    private int corner;
-
+    private static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
+    private static final double WHEEL_CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
     public static final double FF = 2.54447;
-    // ka = 0.453207
 
+    private final int corner;
 
     public Module(int corner) {
-        switch (corner) {
-            case 0 -> {
-                drivingSparkMax = new SparkMax(19, MotorType.kBrushless);
-                turningSparkMax = new SparkMax(18, MotorType.kBrushless);
-            }
-            case 1 -> {
-                drivingSparkMax = new SparkMax(29, MotorType.kBrushless);
-                turningSparkMax = new SparkMax(28, MotorType.kBrushless);
-            }
-            case 2 -> {
-                drivingSparkMax = new SparkMax(21, MotorType.kBrushless);
-                turningSparkMax = new SparkMax(22, MotorType.kBrushless);
-            }
-            case 3 -> {
-                drivingSparkMax = new SparkMax(11, MotorType.kBrushless);
-                turningSparkMax = new SparkMax(12, MotorType.kBrushless);
-            }
-        }
-
         this.corner = corner;
 
-        drivingEncoder = drivingSparkMax.getEncoder();
-        turningEncoder = turningSparkMax.getAbsoluteEncoder();
-        drivingPID = drivingSparkMax.getClosedLoopController();
-        turningPID = turningSparkMax.getClosedLoopController();
-
-        SparkMaxConfig drivingConfig = new SparkMaxConfig();
-        drivingConfig
-                .idleMode(IdleMode.kCoast)
-                .inverted(true)
-                .smartCurrentLimit(40)
-                .voltageCompensation(12);
-
-                drivingConfig.closedLoop .pidf(0.5, 0, 0, 0) .outputRange(-1, 1);
-
-
-        drivingConfig.encoder
-                .positionConversionFactor(1. / DRIVE_GEAR_RATIO * Units.inchesToMeters(4 * Math.PI))
-                .velocityConversionFactor(1. / DRIVE_GEAR_RATIO * Units.inchesToMeters(4 * Math.PI) / 60.);
-
-
-        SparkMaxConfig turningConfig = new SparkMaxConfig();
-        turningConfig
-                .idleMode(IdleMode.kBrake)
-                .inverted(false)
-                .smartCurrentLimit(30)
-                .voltageCompensation(12);
-
-        turningConfig.closedLoop
-                .pidf(2, 0, 0, 0)
-                .positionWrappingEnabled(true)
-                .positionWrappingInputRange(0, 2 * Math.PI)
-                .outputRange(-1, 1);
-
-        turningConfig.absoluteEncoder
-                .positionConversionFactor(Units.rotationsToRadians(1))
-                .inverted(true);
-
-
-        System.out.println(drivingSparkMax.getDeviceId() + " driving " + drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-        System.out.println(turningSparkMax.getDeviceId() + " turning " + turningSparkMax.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-
-        desiredState = new SwerveModuleState(0, new Rotation2d(turningEncoder.getPosition()));
-
-    }
-
-
-    public void setDesiredState(SwerveModuleState targetState, boolean shouldTurn) {
-        desiredState = SwerveModuleState.optimize(targetState, new Rotation2d(turningEncoder.getPosition()));
-
-        drivingPID.setReference(desiredState.speedMetersPerSecond, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
-                desiredState.speedMetersPerSecond * FF, SparkClosedLoopController.ArbFFUnits.kVoltage);
-        if (shouldTurn) {
-            turningPID.setReference(desiredState.angle.getRadians(), ControlType.kPosition);
+        switch (corner) {
+            case 0 -> {
+                driveMotor = new TalonFX(19);
+                turnMotor = new TalonFX(18);
+            }
+            case 1 -> {
+                driveMotor = new TalonFX(29);
+                turnMotor = new TalonFX(28);
+            }
+            case 2 -> {
+                driveMotor = new TalonFX(11);
+                turnMotor = new TalonFX(12);
+            }
+            case 3 -> {
+                driveMotor = new TalonFX(21);
+                turnMotor = new TalonFX(22);
+            }
+            default -> throw new IllegalArgumentException("Invalid module index");
         }
 
-        Logger.recordOutput("Drive/Module" + corner + "/DriveCurrent", drivingSparkMax.getOutputCurrent());
-        Logger.recordOutput("Drive/Module" + corner + "/DriveVoltage", drivingSparkMax.getAppliedOutput() * drivingSparkMax.getBusVoltage());
-        Logger.recordOutput("Drive/Module" + corner + "/DriveVelocity", drivingEncoder.getVelocity());
-        Logger.recordOutput("Drive/Module" + corner + "/DrivePosition", drivingEncoder.getPosition());
+        configureDriveMotor();
+        configureTurnMotor();
+    }
 
-        Logger.recordOutput("Drive/Module" + corner + "/TurnCurrent", turningSparkMax.getOutputCurrent());
-        Logger.recordOutput("Drive/Module" + corner + "/TurnVoltage", turningSparkMax.getAppliedOutput() * turningSparkMax.getBusVoltage());
-        Logger.recordOutput("Drive/Module" + corner + "/TurnPosition", turningEncoder.getPosition());
-        Logger.recordOutput("Drive/Module" + corner + "/TurnVelocity", turningEncoder.getVelocity());
+    private void configureDriveMotor() {
+        TalonFXConfiguration cfg = new TalonFXConfiguration();
 
-        Logger.recordOutput("Drive/Module" + corner + "/DesiredSpeed", desiredState.speedMetersPerSecond);
-        Logger.recordOutput("Drive/Module" + corner + "/DesiredAngle", desiredState.angle);
+        cfg.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        cfg.CurrentLimits.SupplyCurrentLimit = 40;
+        cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+        cfg.Feedback.SensorToMechanismRatio = DRIVE_GEAR_RATIO;
+        cfg.Feedback.RotorToSensorRatio = 1;
+
+        cfg.Slot0.kP = 0.0;
+        cfg.Slot0.kI = 0.0;
+        cfg.Slot0.kD = 0.0;
+        cfg.Slot0.kV = 0.0;
+
+        driveMotor.getConfigurator().apply(cfg);
+    }
+
+    private void configureTurnMotor() {
+        TalonFXConfiguration cfg = new TalonFXConfiguration();
+
+        cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        cfg.CurrentLimits.SupplyCurrentLimit = 30;
+        cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+        cfg.Feedback.SensorToMechanismRatio = 1.0;
+        cfg.Feedback.RotorToSensorRatio = 1.0;
+
+        cfg.Slot0.kP = 2.0;
+        cfg.Slot0.kI = 0.0;
+        cfg.Slot0.kD = 0.0;
+
+        turnMotor.getConfigurator().apply(cfg);
+    }
+
+    public void setDesiredState(SwerveModuleState targetState, boolean shouldTurn) {
+        SwerveModuleState optimized =
+                SwerveModuleState.optimize(targetState, getAngle());
+
+        double wheelRotPerSec = optimized.speedMetersPerSecond / WHEEL_CIRCUMFERENCE;
+
+        driveMotor.setControl(driveRequest.withVelocity(wheelRotPerSec));
+
+        if (shouldTurn) {
+            turnMotor.setControl(turnRequest.withPosition(optimized.angle.getRadians()));
+        }
+    }
+
+    public Rotation2d getAngle() {
+        return Rotation2d.fromRotations(turnMotor.getPosition().getValueAsDouble());
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(drivingEncoder.getVelocity(), new Rotation2d(turningEncoder.getPosition()));
+        double wheelRotPerSec = driveMotor.getVelocity().getValueAsDouble();
+        double speed = wheelRotPerSec * WHEEL_CIRCUMFERENCE;
+
+        return new SwerveModuleState(speed, getAngle());
     }
 
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(drivingEncoder.getPosition(), new Rotation2d(turningEncoder.getPosition()));
+        double wheelRot = driveMotor.getPosition().getValueAsDouble();
+        double distance = wheelRot * WHEEL_CIRCUMFERENCE;
+
+        return new SwerveModulePosition(distance, getAngle());
     }
 
-
-    public void setIdleMode(IdleMode idleMode) {
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.idleMode(idleMode);
-        drivingSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        turningSparkMax.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    public void setIdleMode(NeutralModeValue mode) { 
+        driveMotor.setNeutralMode(mode); 
+        turnMotor.setNeutralMode(mode); 
     }
-
-    public double getDriveVoltage() {
-        return drivingSparkMax.getAppliedOutput() * drivingSparkMax.getBusVoltage();
-    }
-
 }

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -203,7 +204,7 @@ public class RobotContainer {
 
     public void disabledInit() {
         CommandScheduler.getInstance().schedule(
-                Commands.runOnce(() -> drive.setBrakeMode(SparkBaseConfig.IdleMode.kCoast))
+                Commands.runOnce(() -> drive.setBrakeMode(NeutralModeValue.Brake))
                         .beforeStarting(Commands.waitSeconds(3.0))
                         .ignoringDisable(true)
         );
@@ -211,7 +212,7 @@ public class RobotContainer {
 
     public void enabledInit() {
         CommandScheduler.getInstance().schedule(
-                Commands.runOnce(() -> drive.setBrakeMode(SparkBaseConfig.IdleMode.kBrake))
+                Commands.runOnce(() -> drive.setBrakeMode(NeutralModeValue.Brake))
         );
     }
 }
