@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.vision.VisionPositionValues;
 import java.util.function.DoubleSupplier;
 
@@ -30,7 +30,7 @@ import java.util.function.DoubleSupplier;
  */
 public class AutoAlignToHubPID extends Command {
 
-  private final Swerve swerve;
+  private final Drive swerve;
   private final VisionPositionValues vision;
 
   // Driver translation inputs (so you can still drive while aligning)
@@ -41,7 +41,7 @@ public class AutoAlignToHubPID extends Command {
   private final PIDController pid = new PIDController(0.03, 0.0, 0.001);
 
   public AutoAlignToHubPID(
-      Swerve swerve,
+      Drive swerve,
       VisionPositionValues vision,
       DoubleSupplier xSpeed,
       DoubleSupplier ySpeed) {
