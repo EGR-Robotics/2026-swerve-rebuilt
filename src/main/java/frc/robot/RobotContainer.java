@@ -17,9 +17,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AutoAlignToHubPID;
 // import frc.robot.commands.ShootWhileMoving;
 // import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.vision.AprilTagVision;
+import frc.robot.subsystems.vision.VisionPositionValues;
+
 // import frc.robot.subsystems.Intake;
 // import frc.robot.subsystems.Shooter;
 import org.littletonrobotics.junction.Logger;

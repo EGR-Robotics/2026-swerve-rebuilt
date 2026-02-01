@@ -12,6 +12,7 @@ import frc.robot.VisionHelpers.PoseEstimate;
 import java.util.ArrayList;
 import java.util.Optional;
 
+
 /**
  * Limelight IO layer for 2026 API (v1.14).
  * Uses getLatestResults() instead of parseJsonDump().
@@ -93,4 +94,5 @@ public class AprilTagVisionIOLimelight implements AprilTagVisionIO {
     public double getTy() { return ty; }
     public double getTa() { return ta; }
     public boolean hasTarget() { return ta > 0.1; }
+
 }
