@@ -85,22 +85,22 @@ public class Module {
             case 0 -> {
                 driveMotor = new TalonFX(19, "canivore");
                 turnMotor = new TalonFX(18, "canivore");
-                angleEncoder = new CANcoder(30, "canivore");
+                angleEncoder = new CANcoder(30, "canivore"); //placehold
             }
             case 1 -> {
                 driveMotor = new TalonFX(29, "canivore");
                 turnMotor = new TalonFX(28, "canivore");
-                angleEncoder = new CANcoder(31, "canivore");
+                angleEncoder = new CANcoder(31, "canivore"); //placeholder
             }
             case 2 -> {
                 driveMotor = new TalonFX(11, "canivore");
                 turnMotor = new TalonFX(12, "canivore");
-                angleEncoder = new CANcoder(32, "canivore");
+                angleEncoder = new CANcoder(32, "canivore"); //placeholder
             }
             case 3 -> {
                 driveMotor = new TalonFX(21, "canivore");
                 turnMotor = new TalonFX(22, "canivore");
-                angleEncoder = new CANcoder(33, "canivore");
+                angleEncoder = new CANcoder(33, "canivore"); //placeholder
             }
             default -> throw new IllegalArgumentException("Invalid module index");
         }
@@ -183,8 +183,8 @@ public class Module {
     // -------------------------------
     public void setDesiredState(SwerveModuleState targetState, boolean shouldTurn) {
 
-        // ⭐ Your WPILib uses the old signature:
-        //    optimize(desired, Rotation2d)
+        // Your WPILib uses the old signature:
+        //    optimize(desired, Rotation2d) --> will probably need to be changed if we update
         SwerveModuleState optimized =
                 SwerveModuleState.optimize(targetState, getAngle());
 
