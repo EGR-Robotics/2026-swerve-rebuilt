@@ -4,25 +4,24 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.MathUtil;
-import com.revrobotics.spark.config.SparkBaseConfig;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-// import frc.robot.commands.ShootWhileMoving;
-// import frc.robot.subsystems.Climb;
+
 import frc.robot.subsystems.Drive;
-// import frc.robot.subsystems.Intake;
-// import frc.robot.subsystems.Shooter;
+
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
@@ -30,6 +29,7 @@ import java.util.concurrent.Future;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Utils.getSpeed2;
+
 
 
 public class RobotContainer {
