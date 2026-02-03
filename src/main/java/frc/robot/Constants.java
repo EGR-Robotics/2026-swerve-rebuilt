@@ -6,7 +6,6 @@ package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.Module;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -24,9 +23,11 @@ public final class Constants {
     public static String LIMELIGHT_NAME = "limelight";
     public static double TICK_TIME = 20.0 / 1000.0; // 20ms
 
-    public static final double MAX_LINEAR_SPEED_AUTO = 12 / Module.FF;
-    public static final double MAX_LINEAR_SPEED_TELEOP = 13 / Module.FF;
-    public static final double MAX_SHOOTING_SPEED = 5 / Module.FF;
+    public static final double FF = 2.54447;
+
+    public static final double MAX_LINEAR_SPEED_AUTO = 12 / Constants.FF;
+    public static final double MAX_LINEAR_SPEED_TELEOP = 13 / Constants.FF;
+    public static final double MAX_SHOOTING_SPEED = 5 / Constants.FF;
     public static final double MAX_ANGULAR_SPEED = Math.PI * 2;
 
     public static final double SHOOTER_VELOCITY_RANGE = 50;

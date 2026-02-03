@@ -1,16 +1,21 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.LIMELIGHT_NAME;
+import static frc.robot.Constants.TICK_TIME;
+
+import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.revrobotics.spark.config.SparkBaseConfig;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,9 +38,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
 import frc.robot.Utils;
-import org.littletonrobotics.junction.Logger;
-
-import static frc.robot.Constants.*;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class Drive extends SubsystemBase {
     private final Module frontLeftModule;
@@ -284,11 +287,11 @@ public class Drive extends SubsystemBase {
         return new Matrix<>(Nat.N3(), Nat.N1(), new double[]{positionStd, positionStd, rotationStd});
     }
 
-    public void setBrakeMode(SparkBaseConfig.IdleMode idleMode) {
-        frontLeftModule.setIdleMode(idleMode);
-        frontRightModule.setIdleMode(idleMode);
-        backLeftModule.setIdleMode(idleMode);
-        backRightModule.setIdleMode(idleMode);
+    public void setBrakeMode(NeutralModeValue mode) {
+        frontLeftModule.setIdleMode(mode); 
+        frontRightModule.setIdleMode(mode); 
+        backLeftModule.setIdleMode(mode); 
+        backRightModule.setIdleMode(mode); 
     }
 
     public void zeroPose() {
