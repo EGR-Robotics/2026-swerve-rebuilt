@@ -38,25 +38,26 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
 import frc.robot.Utils;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class Drive extends SubsystemBase {
-    private final Module frontLeftModule;
-    private final Module frontRightModule;
-    private final Module backLeftModule;
-    private final Module backRightModule;
+    public final Module frontLeftModule;
+    public final Module frontRightModule;
+    public final Module backLeftModule;
+    public final Module backRightModule;
+
     private static final double TRACK_WIDTH_X = Units.inchesToMeters(27.0);
     private static final double TRACK_WIDTH_Y = Units.inchesToMeters(27.0);
+
     private final SwerveDriveKinematics kinematics;
-    private final StructArrayPublisher<SwerveModuleState> moduleStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("currentStates", SwerveModuleState.struct).publish();
-    private final StructArrayPublisher<SwerveModuleState> desiredStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("desiredStates", SwerveModuleState.struct).publish();
+    private final StructArrayPublisher<SwerveModuleState> moduleStatePublisher =
+            NetworkTableInstance.getDefault().getStructArrayTopic("currentStates", SwerveModuleState.struct).publish();
+    private final StructArrayPublisher<SwerveModuleState> desiredStatePublisher =
+            NetworkTableInstance.getDefault().getStructArrayTopic("desiredStates", SwerveModuleState.struct).publish();
+
     private final AHRS gyro;
-
-
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Field2d field = new Field2d();
     private double lastVisionTimestamp = -1;
-
 
     public Drive() {
         frontLeftModule = new Module(0);
@@ -80,37 +81,26 @@ public class Drive extends SubsystemBase {
         try {
             config = RobotConfig.fromGUISettings();
         } catch (Exception e) {
-            // Handle exception as needed
             throw new RuntimeException(e);
         }
 
-        // Configure AutoBuilder last
         AutoBuilder.configure(
-                this::getPose, // Robot pose supplier
-                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                (speeds, feedforwards) -> drive(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                        new PIDConstants(10.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+                this::getPose,
+                this::resetPose,
+                this::getRobotRelativeSpeeds,
+                (speeds, feedforwards) -> drive(speeds),
+                new PPHolonomicDriveController(
+                        new PIDConstants(10.0, 0.0, 0.0),
+                        new PIDConstants(5.0, 0.0, 0.0)
                 ),
-                config, // The robot configuration
+                config,
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
                     var alliance = DriverStation.getAlliance();
                     return alliance.filter(value -> value == DriverStation.Alliance.Red).isPresent();
                 },
-                this // Reference to this subsystem to set requirements
+                this
         );
-
     }
-
-
-    private double lastAngularVelocity = 0.0;
-    private double lastLogTime = 0.0;
 
     @Override
     public void periodic() {
@@ -121,8 +111,6 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("Gyro Rotation", gyro.getRotation2d());
         poseEstimator.update(gyro.getRotation2d(), getModulePositions());
 
-
-        // Needed for doing megatag2
         LimelightHelpers.SetRobotOrientation(LIMELIGHT_NAME, getGyroRotation().getDegrees(), 0, 0, 0, 0, 0);
         var megaTag2VisionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LIMELIGHT_NAME);
         var megaTag1VisionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue(LIMELIGHT_NAME);
@@ -134,7 +122,6 @@ public class Drive extends SubsystemBase {
 
             var newVisionPose = megaTag2VisionPose.pose;
             if (visionStd.get(2, 0) < 10.0 && false) {
-                // let's use the megatag1 rotation to update our gyro angle
                 newVisionPose = new Pose2d(
                         megaTag2VisionPose.pose.getTranslation(),
                         megaTag1VisionPose.pose.getRotation()
@@ -144,26 +131,27 @@ public class Drive extends SubsystemBase {
 
             Logger.recordOutput("MegaTag2Pose", megaTag2VisionPose.pose);
             Logger.recordOutput("MegaTag1Pose", megaTag1VisionPose.pose);
-
         }
+
         Logger.recordOutput("Last Vision Update", lastVisionTimestamp);
         Logger.recordOutput("Fused Pose", poseEstimator.getEstimatedPosition());
 
         Logger.recordOutput("Gyro/Roll", getGyroRoll());
         Logger.recordOutput("Gyro/Pitch", getGyroPitch());
 
-
-        field.setRobotPose(poseEstimator.getEstimatedPosition()); // Logs the position for advantagekit
+        field.setRobotPose(poseEstimator.getEstimatedPosition());
     }
 
-
-    /**
-     * @param speeds robot relative speeds
-     */
     public void drive(ChassisSpeeds speeds) {
         speeds = ChassisSpeeds.discretize(speeds, TICK_TIME);
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
-        boolean shouldTurn = Math.abs(speeds.vyMetersPerSecond) + Math.abs(speeds.vxMetersPerSecond) + Math.abs(speeds.omegaRadiansPerSecond) > 0.0;
+
+        // ⭐ FIX: Deadband so wheels don't turn when joystick is idle
+        boolean shouldTurn =
+                Math.abs(speeds.vyMetersPerSecond) > 0.02 ||
+                Math.abs(speeds.vxMetersPerSecond) > 0.02 ||
+                Math.abs(speeds.omegaRadiansPerSecond) > 0.02;
+
         frontLeftModule.setDesiredState(states[0], shouldTurn);
         frontRightModule.setDesiredState(states[1], shouldTurn);
         backLeftModule.setDesiredState(states[2], shouldTurn);
@@ -171,7 +159,6 @@ public class Drive extends SubsystemBase {
 
         desiredStatePublisher.set(states);
         Logger.recordOutput("Drive/DesiredModuleStates", states);
-
     }
 
     public void drive(double x, double y, double theta, boolean isFieldOriented) {
@@ -188,7 +175,6 @@ public class Drive extends SubsystemBase {
         var thetaSpeed = positionRotationPid.calculate(getPose().getRotation().getRadians(), angle) + angularVelocity * kV + angularAcceleration * kA;
         drive(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, thetaSpeed, getGyroRotation()));
     }
-
 
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[]{
@@ -208,13 +194,16 @@ public class Drive extends SubsystemBase {
         };
     }
 
-
     public Rotation2d getGyroRotation() {
         return poseEstimator.getEstimatedPosition().getRotation();
     }
 
     public Rotation2d getGyroRoll() {
         return new Rotation2d(Units.degreesToRadians(gyro.getRoll()));
+    }
+
+    public Rotation2d getGyroPitch() {
+        return Rotation2d.fromDegrees(gyro.getPitch());
     }
 
     public Pose2d getPose() {
@@ -234,9 +223,7 @@ public class Drive extends SubsystemBase {
     }
 
     PIDController positionTranslationPid = new PIDController(5.0, 0.0, 0.0);
-
     PIDController positionRotationPid = new PIDController(5.0, 0.0, 0.5);
-
 
     {
         positionRotationPid.enableContinuousInput(0, Units.degreesToRadians(360.0));
@@ -256,15 +243,7 @@ public class Drive extends SubsystemBase {
         );
     }
 
-
-    /**
-     * Precondition: visionPose.rawFiducials.length > 0
-     *
-     * @param visionPose
-     * @return Standard deviations of the vision pose measurement (x position in meters, y position in meters, and heading in radians). Increase these numbers to trust the vision pose measurement less.
-     */
     private Matrix<N3, N1> calculateVisionStd(LimelightHelpers.PoseEstimate visionPose) {
-
         var closestTag = visionPose.rawFiducials[0];
 
         for (LimelightHelpers.RawFiducial rawFiducial : visionPose.rawFiducials) {
@@ -273,9 +252,7 @@ public class Drive extends SubsystemBase {
             }
         }
 
-        // std calculation are just guesses
         var rotationStd = 99999.0;
-
         var rotationRate = Math.toRadians(gyro.getRate());
 
         if (closestTag.distToCamera < 1 && rotationRate < Math.PI * 0.25) {
@@ -288,10 +265,10 @@ public class Drive extends SubsystemBase {
     }
 
     public void setBrakeMode(NeutralModeValue mode) {
-        frontLeftModule.setIdleMode(mode); 
-        frontRightModule.setIdleMode(mode); 
-        backLeftModule.setIdleMode(mode); 
-        backRightModule.setIdleMode(mode); 
+        frontLeftModule.setIdleMode(mode);
+        frontRightModule.setIdleMode(mode);
+        backLeftModule.setIdleMode(mode);
+        backRightModule.setIdleMode(mode);
     }
 
     public void zeroPose() {
@@ -299,8 +276,11 @@ public class Drive extends SubsystemBase {
     }
 
     public boolean shouldBumpAdjust() {
-        var futurePos = getPose().getTranslation().plus(new Translation2d(getFieldRelativeSpeeds().vxMetersPerSecond * 0.5, getFieldRelativeSpeeds().vyMetersPerSecond * 0.5));
-        return (Utils.isPointInBox(futurePos, new Translation2d(158.61, 62.35), new Translation2d(205.61, 135.35))) && Timer.getFPGATimestamp() - lastVisionTimestamp < 1.0;
+        var futurePos = getPose().getTranslation().plus(
+                new Translation2d(getFieldRelativeSpeeds().vxMetersPerSecond * 0.5,
+                        getFieldRelativeSpeeds().vyMetersPerSecond * 0.5));
+        return (Utils.isPointInBox(futurePos, new Translation2d(158.61, 62.35), new Translation2d(205.61, 135.35)))
+                && Timer.getFPGATimestamp() - lastVisionTimestamp < 1.0;
     }
 
     public double closestBumpAngle() {
@@ -309,8 +289,17 @@ public class Drive extends SubsystemBase {
         return snappedShifted + Math.PI / 4;
     }
 
-    public Rotation2d getGyroPitch() {
-        return Rotation2d.fromDegrees(gyro.getPitch());
-    }
+    public void holdHeadingTest() {
+        var states = new SwerveModuleState[]{
+                new SwerveModuleState(0.0, Rotation2d.fromDegrees(0)),
+                new SwerveModuleState(0.0, Rotation2d.fromDegrees(0)),
+                new SwerveModuleState(0.0, Rotation2d.fromDegrees(0)),
+                new SwerveModuleState(0.0, Rotation2d.fromDegrees(0))
+        };
 
+        frontLeftModule.setDesiredState(states[0], true);
+        frontRightModule.setDesiredState(states[1], true);
+        backLeftModule.setDesiredState(states[2], true);
+        backRightModule.setDesiredState(states[3], true);
+    }
 }
