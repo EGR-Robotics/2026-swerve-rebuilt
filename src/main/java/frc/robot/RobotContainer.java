@@ -25,7 +25,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ClearSwerveOffsets;
 import frc.robot.commands.ZeroWheels;
 import frc.robot.subsystems.Drive;
 
@@ -38,20 +39,28 @@ public class RobotContainer {
 
     private Future<PathPlannerPath> onTheFlyPath = null;
 
+    private final ClearSwerveOffsets clearOffsets = new ClearSwerveOffsets();
+
+
     public RobotContainer() {
 
-        // Load persistent offsets (NO ZeroWheels at startup)
-        boolean offsetsSet = Preferences.getBoolean("Swerve/OffsetsSet", false);
+//         Preferences.remove("SteerOffset0");
+// Preferences.remove("SteerOffset1");
+// Preferences.remove("SteerOffset2");
+// Preferences.remove("SteerOffset3");
 
-        if (offsetsSet) {
-            drive.frontLeftModule.seedSteerFromAbsolute();
-            drive.frontRightModule.seedSteerFromAbsolute();
-            drive.backLeftModule.seedSteerFromAbsolute();
-            drive.backRightModule.seedSteerFromAbsolute();
-            System.out.println("Swerve offsets loaded from Preferences.");
-        } else {
-            System.out.println("Swerve offsets NOT set. Run ZeroWheels once with wheels straight to calibrate.");
-        }
+        // Load persistent offsets (NO ZeroWheels at startup)
+       // boolean offsetsSet = Preferences.getBoolean("Swerve/OffsetsSet", false);
+
+        // if (offsetsSet) {
+        //     drive.frontLeftModule.seedSteerFromAbsolute();
+        //     drive.frontRightModule.seedSteerFromAbsolute();
+        //     drive.backLeftModule.seedSteerFromAbsolute();
+        //     drive.backRightModule.seedSteerFromAbsolute();
+        //     System.out.println("Swerve offsets loaded from Preferences.");
+        // } else {
+        //     System.out.println("Swerve offsets NOT set. Run ZeroWheels once with wheels straight to calibrate.");
+        // }
 
         // Warm up path planner (your original code)
         System.out.println("Warming up path planner");
@@ -79,14 +88,25 @@ public class RobotContainer {
     private void configureBindings() {
 
         // X BUTTON → Run ZeroWheels manually
-        //m_driverController.x().onTrue(
-                //new ZeroWheels(
-                       // drive.frontLeftModule,
-                      //  drive.frontRightModule,
-                       // drive.backLeftModule,
-                       // drive.backRightModule
-               // )
-       // );
+        m_driverController.x().onTrue(
+                new ZeroWheels(
+                        drive.frontLeftModule,
+                        drive.frontRightModule,
+                        drive.backLeftModule,
+                        drive.backRightModule
+                )
+        );
+
+        m_driverController.y().onTrue(clearOffsets);
+
+        m_driverController.b().onTrue(
+            new ZeroWheels(
+                drive.frontLeftModule, 
+                drive.frontRightModule,
+                drive.backLeftModule, 
+                drive.backRightModule
+        ));
+
 
         // A button → hold heading test (your original)
         m_driverController.a().whileTrue(Commands.run(() -> drive.holdHeadingTest(), drive));

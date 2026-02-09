@@ -46,7 +46,7 @@ public class Drive extends SubsystemBase {
     public final Module backRightModule;
 
     private static final double TRACK_WIDTH_X = Units.inchesToMeters(27.0);
-    private static final double TRACK_WIDTH_Y = Units.inchesToMeters(27.0);
+    private static final double TRACK_WIDTH_Y = Units.inchesToMeters(27.5);
 
     private final SwerveDriveKinematics kinematics;
     private final StructArrayPublisher<SwerveModuleState> moduleStatePublisher =
