@@ -1,156 +1,121 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
-import static frc.robot.Constants.ANGLE_CLOSE_RAD;
-import static frc.robot.Constants.MAX_ANGULAR_SPEED;
-import static frc.robot.Constants.MAX_LINEAR_SPEED_TELEOP;
-import static frc.robot.Constants.normConstraints;
-import static frc.robot.Utils.getSpeed2;
+import static edu.wpi.first.units.Units.*;
 
-import java.util.Set;
-import java.util.concurrent.Future;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.ClearSwerveOffsets;
-import frc.robot.commands.ZeroWheels;
-import frc.robot.subsystems.Drive;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
+    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    
+    /* Setting up bindings for necessary control of the swerve drive platform */
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-    private final Drive drive = new Drive();
-    private final CommandXboxController m_driverController = new CommandXboxController(0);
+    private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private Future<PathPlannerPath> onTheFlyPath = null;
+    private final CommandXboxController driverController = new CommandXboxController(0);
+    private final CommandXboxController operatorController = new CommandXboxController(1);
 
-    private final ClearSwerveOffsets clearOffsets = new ClearSwerveOffsets();
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    public Shooter shooter = new Shooter();
 
     public RobotContainer() {
-
-//         Preferences.remove("SteerOffset0");
-// Preferences.remove("SteerOffset1");
-// Preferences.remove("SteerOffset2");
-// Preferences.remove("SteerOffset3");
-
-        // Load persistent offsets (NO ZeroWheels at startup)
-       // boolean offsetsSet = Preferences.getBoolean("Swerve/OffsetsSet", false);
-
-        // if (offsetsSet) {
-        //     drive.frontLeftModule.seedSteerFromAbsolute();
-        //     drive.frontRightModule.seedSteerFromAbsolute();
-        //     drive.backLeftModule.seedSteerFromAbsolute();
-        //     drive.backRightModule.seedSteerFromAbsolute();
-        //     System.out.println("Swerve offsets loaded from Preferences.");
-        // } else {
-        //     System.out.println("Swerve offsets NOT set. Run ZeroWheels once with wheels straight to calibrate.");
-        // }
-
-        // Warm up path planner (your original code)
-        System.out.println("Warming up path planner");
-        for (int i = 0; i < 10; i++) {
-            var finalPathPoint = new Pose2d(
-                    new Translation2d(Math.random() * 10 - 5, Math.random() * 10 - 5),
-                    Rotation2d.fromDegrees(Math.random() * 360)
-            );
-
-            Rotation2d targetRotation = Rotation2d.fromDegrees(Math.random() * 360);
-            var time = Timer.getFPGATimestamp();
-            var path = AsyncPathGenerator.generatePathAsync(finalPathPoint, targetRotation, drive, normConstraints);
-            try {
-                var points = path.get().getAllPathPoints();
-                var duration = Timer.getFPGATimestamp() - time;
-                System.out.println("Generated path " + (i + 1) + "/10. " + points.size() + " points in " + duration + " seconds");
-            } catch (Exception e) {
-                System.out.println("Path failed to generate" + e);
-            }
-        }
-
         configureBindings();
     }
 
     private void configureBindings() {
-
-        // X BUTTON → Run ZeroWheels manually
-        m_driverController.x().onTrue(
-                new ZeroWheels(
-                        drive.frontLeftModule,
-                        drive.frontRightModule,
-                        drive.backLeftModule,
-                        drive.backRightModule
-                )
+        // Note that X is defined as forward according to WPILib convention,
+        // and Y is defined as to the left according to WPILib convention.
+        drivetrain.setDefaultCommand(
+            // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
         );
 
-        m_driverController.y().onTrue(clearOffsets);
+        // Idle while the robot is disabled. This ensures the configured
+        // neutral mode is applied to the drive motors while disabled.
+        final var idle = new SwerveRequest.Idle();
+        RobotModeTriggers.disabled().whileTrue(
+            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+        );
 
-        m_driverController.b().onTrue(
-            new ZeroWheels(
-                drive.frontLeftModule, 
-                drive.frontRightModule,
-                drive.backLeftModule, 
-                drive.backRightModule
+        driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        driverController.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
         ));
 
+        // Run SysId routines when holding back/start and X/Y.
+        // Note that each routine should be run exactly once in a single log.
+        driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // A button → hold heading test (your original)
-        m_driverController.a().whileTrue(Commands.run(() -> drive.holdHeadingTest(), drive));
+        // Reset the field-centric heading on left bumper press.
+        //joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        driverController.leftBumper().onTrue(new InstantCommand(() -> drivetrain.zeroHeading(), drivetrain));
+        
+        shooter.setDefaultCommand(
+            new RunCommand(() -> {
+                double flywheelTrigger = operatorController.getRightTriggerAxis();
+                double rpm = flywheelTrigger * 5000;
+                shooter.setFlywheelRPM(rpm);
 
-        // Default drive command
-        drive.setDefaultCommand(
-                new RunCommand(() -> {
-                    var thetaInput = Math.abs(m_driverController.getRightX()) * m_driverController.getRightX() * MAX_ANGULAR_SPEED * -1;
-                    var controls = getControls(m_driverController);
-                    if (drive.shouldBumpAdjust()) {
-                        drive.rotationPidDrive(controls.getX(), controls.getY(), drive.closestBumpAngle(), 0.0, 0.0);
-                    } else {
-                        drive.drive(controls.getX(), controls.getY(), thetaInput, true);
-                    }
-                }, drive));
+                double hoodTrigger = operatorController.getLeftTriggerAxis();
+                double minAngle = 40;// change the values of angles
+                double maxAngle = 80;
 
-        // Start button → zero pose
-        m_driverController.start().onTrue(Commands.runOnce(drive::zeroPose, drive));
-    }
+                double angle = maxAngle - hoodTrigger * (maxAngle - minAngle);
+                shooter.setHoodAngle(angle);
+            }, shooter)
+        );
 
-    public static Translation2d getControls(CommandXboxController m_driverController) {
-        var xInput = -Math.abs(m_driverController.getLeftY()) * m_driverController.getLeftY() * MAX_LINEAR_SPEED_TELEOP;
-        var yInput = -Math.abs(m_driverController.getLeftX()) * m_driverController.getLeftX() * MAX_LINEAR_SPEED_TELEOP;
-        return new Translation2d(xInput, yInput);
+        drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
-        return null;
-    }
-
-    public void disabledInit() {
-        CommandScheduler.getInstance().schedule(
-                Commands.runOnce(() -> drive.setBrakeMode(NeutralModeValue.Brake))
-                        .beforeStarting(Commands.waitSeconds(3.0))
-                        .ignoringDisable(true)
+        // Simple drive forward auton
+        final var idle = new SwerveRequest.Idle();
+        return Commands.sequence(
+            // Reset our field centric heading to match the robot
+            // facing away from our alliance station wall (0 deg).
+            drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
+            // Then slowly drive forward (away from us) for 5 seconds.
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(0.5)
+                    .withVelocityY(0)
+                    .withRotationalRate(0)
+            )
+            .withTimeout(5.0),
+            // Finally idle for the rest of auton
+            drivetrain.applyRequest(() -> idle)
         );
     }
-
-    public void enabledInit() {
-        CommandScheduler.getInstance().schedule(
-                Commands.runOnce(() -> drive.setBrakeMode(NeutralModeValue.Brake))
-        );
-    }
-
-    
 }
-
