@@ -1,79 +1,52 @@
-// package frc.robot.subsystems;
+package frc.robot.subsystems;
 
-// import com.revrobotics.spark.SparkBase;
-// import com.revrobotics.spark.SparkMax;
-// import com.revrobotics.spark.SparkLowLevel.MotorType;
-// import com.revrobotics.spark.config.SparkMaxConfig;
-// import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
-// import edu.wpi.first.wpilibj.DoubleSolenoid;
-// import edu.wpi.first.wpilibj.PneumaticsModuleType;
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.Commands;
-// import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase {
 
+    private final TalonFX intakeRoller = new TalonFX(99);//change IDS
+    private final TalonFX intakePivot = new TalonFX(99);
 
-//     private static final double INTAKE_VOLTAGE = 11.0;
-//     private static final double OUTTAKE_VOLTAGE = -11.0;
-//     private final SparkMax intakeSparkMax;
-//     private final DoubleSolenoid intakeSwitch;
+    private static final double intakeSpeed = 0.9;
+    private static final double raiseIntakeSpeed = 0.9;
 
+    public Intake() {
+        // intakeRoller.setNeutralMode(NeutralModeValue.Brake);
+        // intakePivot.setNeutralMode(NeutralModeValue.Brake);
+    }
 
-//     public Intake() {
-//         intakeSparkMax = new SparkMax(53, MotorType.kBrushless);
-//         SparkMax followerSparkMax = new SparkMax(30, MotorType.kBrushless);
-//         intakeSwitch = new DoubleSolenoid(8, PneumaticsModuleType.CTREPCM, 1, 3);
-//         intakeSparkMax.setVoltage(0);
-//         var intakeConfig = new SparkMaxConfig();
-//         intakeConfig.inverted(true);
-//         intakeConfig.idleMode(IdleMode.kCoast);
-//         intakeConfig.smartCurrentLimit(30);
-//         intakeConfig.voltageCompensation(12);
-//         intakeSparkMax.configure(intakeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-//         this.setDefaultCommand(this.run(() -> intakeSparkMax.setVoltage(0)));
+    /** Run intake forward */
+    public void intake(double triggerVal) {
+        intakeRoller.setControl(new VoltageOut(triggerVal * intakeSpeed * 12));
+    }
 
-//         var followerConfig = new SparkMaxConfig();
-//         followerConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(30).voltageCompensation(12).follow(53, true);
-//         followerSparkMax.configure(followerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-//     }
+    /** Reverse intake */
+    public void reverseIntake() {
+        intakeRoller.setControl(new VoltageOut(-intakeSpeed * 12));
+    }
 
+    /** Stop intake roller */
+    public void stopRoller() {
+        intakeRoller.setControl(new VoltageOut(0));
+    }
 
-//     public Command intakeDown() {
-//         return Commands.runOnce(() -> intakeSwitch.set(DoubleSolenoid.Value.kForward));
-//     }
+    /** Lower intake (pivot down) */
+    public void lowerIntake() {
+        intakePivot.setControl(new VoltageOut(raiseIntakeSpeed * 12));
+    }
 
-//     public Command intakeUp() {
-//         return Commands.runOnce(() -> intakeSwitch.set(DoubleSolenoid.Value.kReverse));
-//     }
+    /** Stop pivot motor */
+    public void stopPivot() {
+        intakePivot.setControl(new VoltageOut(0));
+    }
 
-//     public Command toggleIntake() {
-//         return Commands.runOnce(() -> {
-//             intakeSwitch.set(isExtended() ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
-//         });
-//     }
-
-//     public boolean isExtended() {
-//         return (intakeSwitch.get().equals(DoubleSolenoid.Value.kForward));
-//     }
-
-
-//     public Command intake() {
-//         return Commands.run(() -> intakeSparkMax.setVoltage(INTAKE_VOLTAGE), this);
-//     }
-
-//     public Command outtake() {
-//         return Commands.run(() -> intakeSparkMax.setVoltage(OUTTAKE_VOLTAGE), this);
-//     }
-
-//     @Override
-//     public void periodic() {
-//         Logger.recordOutput("Intake Current", intakeSparkMax.getOutputCurrent());
-//         Logger.recordOutput("Intake Output", intakeSparkMax.getAppliedOutput());
-//         Logger.recordOutput("Intake Extended", intakeSwitch.get());
-
-//     }
-
-// }
+    /** Stop everything */
+    public void stopAll() {
+        stopRoller();
+        stopPivot();
+    }
+}

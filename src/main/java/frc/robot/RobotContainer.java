@@ -16,11 +16,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
+
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
@@ -42,6 +46,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     public Shooter shooter = new Shooter();
+    public Climber climber = new Climber();
+    public Intake intake = new Intake();
 
     public RobotContainer() {
         configureBindings();
@@ -97,6 +103,16 @@ public class RobotContainer {
             }, shooter)
         );
 
+        operatorController.b().whileTrue(new RunCommand(() -> climber.climbRight(), climber).finallyDo(() -> climber.stop()));
+        operatorController.x().whileTrue(new RunCommand(() -> climber.climbLeft(), climber).finallyDo(() -> climber.stop()));
+        operatorController.a().whileTrue(new RunCommand(() -> climber.climbBoth(), climber).finallyDo(() -> climber.stop()));
+        operatorController.y().whileTrue(new RunCommand(() -> climber.toggleDirection(), climber));
+        
+        driverController.leftTrigger().whileTrue(new RunCommand(() -> intake.intake(driverController.getLeftTriggerAxis()), intake).finallyDo(() -> intake.stopRoller()));
+        driverController.leftBumper().whileTrue(new RunCommand(() -> intake.reverseIntake(), intake).finallyDo(() -> intake.stopRoller()));
+        
+        operatorController.leftBumper().whileTrue(new RunCommand(() -> intake.lowerIntake(), intake).finallyDo(() -> intake.stopRoller()));//for testing
+        
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
