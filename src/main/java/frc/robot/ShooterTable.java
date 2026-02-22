@@ -10,7 +10,7 @@ public class ShooterTable {
     private final InterpolatingDoubleTreeMap rpmMap = new InterpolatingDoubleTreeMap();
 
     public ShooterTable() {
-        // Add tuned points here
+        // TODO: Add tuned points here
         addPoint(2.0, 76, 3600);
         addPoint(3.0, 71, 3900);
         addPoint(4.0, 66, 4300);
