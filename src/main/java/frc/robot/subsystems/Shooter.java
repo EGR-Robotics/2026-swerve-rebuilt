@@ -18,7 +18,7 @@ public class Shooter extends SubsystemBase {
     private final TalonFX roller = new TalonFX(25, "5980");
     private final TalonFX shooterFeeder = new TalonFX(50, "5980");
     
-    private static final double FLYWHEEL_GEAR_RATIO = 1.0;//TODO: change all of these values to the right ones.
+    private static final double FLYWHEEL_GEAR_RATIO = 1.0;
     private static final double HOOD_GEAR_RATIO = 50.0;
 
     private static final double MIN_ANGLE = 40;
@@ -35,6 +35,9 @@ public class Shooter extends SubsystemBase {
 
     private final VelocityVoltage flywheelReq = new VelocityVoltage(0).withEnableFOC(true);
     private final VelocityVoltage feederReq = new VelocityVoltage(0).withEnableFOC(true);
+
+    private final VelocityVoltage rollerReq = new VelocityVoltage(0).withEnableFOC(true); // ADDED
+
     private final PositionVoltage hoodReq = new PositionVoltage(0).withEnableFOC(true);
 
     public Shooter() {
@@ -48,33 +51,62 @@ public class Shooter extends SubsystemBase {
 
         flyCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
-        flyCfg.Slot0.kP = 0.18;
+        //flywheel
+        flyCfg.Slot0.kP = 0.18;//tune
         flyCfg.Slot0.kI = 0.0;
         flyCfg.Slot0.kD = 0.0;
         
-        flyCfg.Slot0.kV = 0.12;
+        flyCfg.Slot0.kV = 0.12;//tune
         flyCfg.Slot0.kS = 0.0;
 
         flyCfg.Feedback.SensorToMechanismRatio = FLYWHEEL_GEAR_RATIO;
 
         flywheel.getConfigurator().apply(flyCfg, 0.25);
+
+        //hood
+        TalonFXConfiguration hoodCfg = new TalonFXConfiguration();
+        
+        hoodCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        
+        hoodCfg.Slot0.kP = 2.0;//tune maybe
+        hoodCfg.Slot0.kI = 0.0;
+        hoodCfg.Slot0.kD = 0.0;
+        
+        hoodCfg.Feedback.SensorToMechanismRatio = HOOD_GEAR_RATIO;
+        
+        hood.getConfigurator().apply(hoodCfg, 0.25);
+
+        //feeder
+        TalonFXConfiguration feederCfg = new TalonFXConfiguration();
+        
+        feederCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        
+        feederCfg.Slot0.kP = 0.1;//tune maybe
+        feederCfg.Slot0.kI = 0.0;
+        feederCfg.Slot0.kD = 0.0;
+        
+        shooterFeeder.getConfigurator().apply(feederCfg, 0.25);
+
+        //rollers
+        TalonFXConfiguration rollerCfg = new TalonFXConfiguration();
+        
+        rollerCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        
+        rollerCfg.Slot0.kP = 0.1;//tune maybe
+        rollerCfg.Slot0.kI = 0.0;
+        rollerCfg.Slot0.kD = 0.0;
+        
+        roller.getConfigurator().apply(rollerCfg, 0.25);
     }
 
     public void setFlywheelRPM(double rpm) {
         goalRPM = rpm;
         double motorRPS = -(rpm / 60.0) * FLYWHEEL_GEAR_RATIO;
         flywheel.setControl(flywheelReq.withVelocity(motorRPS));
-        //flywheel.setControl(new VoltageOut(0.1 * voltageNumber));
     }
 
-    //public void setFlywheelPercent(double percent){
-        //flywheel.set(percent);
-    //}
-
     public void setFeederSpeed(double rpm){
-         shooterFeeder.setControl(new VoltageOut(feederSpeed * voltageNumber));
-        
-         double motorRPS = -(rpm / 60.0) * FLYWHEEL_GEAR_RATIO;
+        double motorRPS = -(rpm / 60.0) * FLYWHEEL_GEAR_RATIO;
         shooterFeeder.setControl(feederReq.withVelocity(motorRPS));
     }
     
@@ -82,9 +114,19 @@ public class Shooter extends SubsystemBase {
         shooterFeeder.setControl(new VoltageOut(0));
     }
 
+    public void setRollerRPM(double rpm){
+        double motorRPS = rpm / 60.0;
+        roller.setControl(rollerReq.withVelocity(motorRPS));
+    }
+
+    public void stopRoller(){
+        roller.setControl(new VoltageOut(0));
+    }
+
     public void feedAndFlywheel(double rpm){
         setFlywheelRPM(rpm);
         setFeederSpeed(rpm);
+        setRollerRPM(2000); 
     }
 
     public void setHoodAngle(double deg) {

@@ -78,19 +78,33 @@ public class RobotContainer {
 
         driverController.rightTrigger().whileTrue(
             new RunCommand(() -> {
-                double trigger = driverController.getRightTriggerAxis();
-                shooter.feedAndFlywheel(trigger * MAX_RPM);
-            }, shooter).finallyDo(() -> shooter.feedAndFlywheel(0))
+
+                boolean autoAlignActive =
+                    driverController.x().getAsBoolean() ||
+                    driverController.b().getAsBoolean();
+
+                if (autoAlignActive) {
+                    shooter.setFeederSpeed(3000);
+                    shooter.setRollerRPM(3000);
+                } else {
+                    shooter.setFeederSpeed(3000);
+                    shooter.setRollerRPM(3000);
+                    shooter.setFlywheelRPM(800); // tune spit-out RPM 
+                }
+
+            }, shooter).finallyDo(() -> {
+                shooter.stopFeeder();
+                shooter.stopRoller();
+                shooter.setFlywheelRPM(0);
+            })
         );
 
         driverController.y().onTrue(
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
         );
 
-        // A, B, X, Right Bumper → empty
         driverController.x().whileTrue(new FeedFromNeutral(shooter));
-        driverController.y().whileTrue(new FeedFromOpposite(shooter));
-
+        driverController.b().whileTrue(new FeedFromOpposite(shooter));
 
         driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
@@ -138,13 +152,10 @@ public class RobotContainer {
                 .finallyDo(() -> climber.stop())
         );
 
-        // Left Bumper → Intake down
         operatorController.leftBumper().whileTrue(
             new RunCommand(() -> intake.lowerIntake(), intake)
                 .finallyDo(() -> intake.stopPivot())
         );
-
-        // Right Bumper → intentionally empty
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
