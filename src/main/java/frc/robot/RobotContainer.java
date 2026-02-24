@@ -105,6 +105,7 @@ public class RobotContainer {
             })
         );
 
+        //Consider changigng so we can make y a preset shoot in hub angle + speed
         driverController.y().onTrue(
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
         );
@@ -112,6 +113,7 @@ public class RobotContainer {
         driverController.x().whileTrue(new FeedFromNeutral(shooter));
         driverController.b().whileTrue(new FeedFromOpposite(shooter));
         
+        //Eventually will add autoshootaligncommand to this, but for testing first leave just autofacehub
         driverController.a().whileTrue(
             new AutoFaceHubCommand(drivetrain)
         );
