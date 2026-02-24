@@ -9,16 +9,14 @@ public class Vision {
     private static final String FRONT_LL = "limelight-front";
     private static final String BACK_LL  = "limelight-back";
 
-    // EDIT THESE TO MATCH REAL FIELD TAG IDS
-    private static final int[] BLUE_HUB_TAGS = {1, 2, 3, 4};
-    private static final int[] RED_HUB_TAGS  = {5, 6, 7, 8};
+    private static final int[] BLUE_HUB_TAGS = {26, 25, 27, 24, 18, 21};
+    private static final int[] RED_HUB_TAGS  = {10, 9, 11, 8, 2, 5};
 
-    // Climb tag fallback -- EDIT TO MATCH REAL FIELD
-    private static final int[] BLUE_CLIMB_TAGS = {9};
-    private static final int[] RED_CLIMB_TAGS  = {10};
+    private static final int[] BLUE_CLIMB_TAGS = {31, 32};
+    private static final int[] RED_CLIMB_TAGS  = {15, 16};
 
     // Replace this with the REAL field measurement (meters)
-    private static final double HUB_TO_CLIMB_DISTANCE = 3.00; // <-- UPDATE THIS
+    private static final double HUB_TO_CLIMB_DISTANCE = 3.00; //Todo: <-- UPDATE THIS
 
     public Vision() {}
 

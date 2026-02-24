@@ -11,7 +11,8 @@ public class Intake extends SubsystemBase {
     private final TalonFX intakePivot = new TalonFX(26, "5980");
 
     private static final double intakeSpeed = 0.9;//TODO: Change the speeds.
-    private static final double raiseIntakeSpeed = 0.9;
+    private static final double lowerIntakeSpeed = 0.9;
+    private static final double raiseIntakeSpeed = -0.9;
     private static final double voltageNumber = 12;
 
     public Intake() {
@@ -36,6 +37,10 @@ public class Intake extends SubsystemBase {
 
     /** Lower intake (pivot down) */
     public void lowerIntake() {
+        intakePivot.setControl(new VoltageOut(lowerIntakeSpeed * voltageNumber));
+    }
+
+    public void raiseIntake() {
         intakePivot.setControl(new VoltageOut(raiseIntakeSpeed * voltageNumber));
     }
 
