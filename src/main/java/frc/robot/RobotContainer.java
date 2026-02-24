@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
@@ -87,14 +83,26 @@ public class RobotContainer {
 
         // Reset the field-centric heading on left bumper press.
         //joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-        driverController.leftBumper().onTrue(new InstantCommand(() -> drivetrain.zeroHeading(), drivetrain));
-        
+        driverController.leftBumper().onTrue(
+            drivetrain.runOnce(() -> drivetrain.seedFieldCentric())   // *** CHANGED ***
+        );
+
+        // Set field orientation using the Y button
+        driverController.y().onTrue(
+            drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
+        );
+
+        // Calibrate module offsets on Right Bumper
+        driverController.rightBumper().onTrue(
+            new InstantCommand(() -> drivetrain.calibrateOffsets())   // *** ADDED ***
+        );
+
         shooter.setDefaultCommand(
             new RunCommand(() -> {
                 double flywheelTrigger = operatorController.getRightTriggerAxis();
-                double rpm = flywheelTrigger * MAX_RPM; // TODO: cahnge max rpm number
-                // shooter.feedAndFlywheel(rpm);
-                shooter.setFeederSpeed(flywheelTrigger);
+                double rpm = flywheelTrigger * MAX_RPM; // TODO: change max rpm number
+                shooter.setFlywheelRPM(rpm);
+                // shooter.setFeederSpeed(flywheelTrigger);
 
                 double hoodTrigger = operatorController.getLeftTriggerAxis();
                 double minAngle = 40;// TODO: change the values of angles
