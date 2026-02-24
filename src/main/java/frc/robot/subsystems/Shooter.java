@@ -34,7 +34,7 @@ public class Shooter extends SubsystemBase {
     private double goalAngle = 60;
 
     private final VelocityVoltage flywheelReq = new VelocityVoltage(0).withEnableFOC(true);
-    // private final VelocityVoltage feederReq = new VelocityVoltage(0).withEnableFOC(true);
+    private final VelocityVoltage feederReq = new VelocityVoltage(0).withEnableFOC(true);
     private final PositionVoltage hoodReq = new PositionVoltage(0).withEnableFOC(true);
 
     public Shooter() {
@@ -64,7 +64,7 @@ public class Shooter extends SubsystemBase {
         goalRPM = rpm;
         double motorRPS = -(rpm / 60.0) * FLYWHEEL_GEAR_RATIO;
         flywheel.setControl(flywheelReq.withVelocity(motorRPS));
-        // flywheel.setControl(new VoltageOut(0.1 * voltageNumber));
+        //flywheel.setControl(new VoltageOut(0.1 * voltageNumber));
     }
 
     //public void setFlywheelPercent(double percent){
@@ -72,10 +72,10 @@ public class Shooter extends SubsystemBase {
     //}
 
     public void setFeederSpeed(double rpm){
-         //shooterFeeder.setControl(new VoltageOut(feederSpeed * voltageNumber));
+         shooterFeeder.setControl(new VoltageOut(feederSpeed * voltageNumber));
         
-        // double motorRPS = -(rpm / 60.0) * FLYWHEEL_GEAR_RATIO;
-        // shooterFeeder.setControl(feederReq.withVelocity(motorRPS));
+         double motorRPS = -(rpm / 60.0) * FLYWHEEL_GEAR_RATIO;
+        shooterFeeder.setControl(feederReq.withVelocity(motorRPS));
     }
     
     public void stopFeeder(){
@@ -84,7 +84,7 @@ public class Shooter extends SubsystemBase {
 
     public void feedAndFlywheel(double rpm){
         setFlywheelRPM(rpm);
-        // setFeederSpeed(rpm);
+        setFeederSpeed(rpm);
     }
 
     public void setHoodAngle(double deg) {
