@@ -26,16 +26,31 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
-
-import com.ctre.phoenix6.hardware.CANcoder; // *** ADDED ***
-import com.ctre.phoenix6.configs.CANcoderConfiguration; // *** ADDED ***
+import com.ctre.phoenix6.hardware.CANcoder; 
+import com.ctre.phoenix6.configs.CANcoderConfiguration; 
+import frc.robot.subsystems.Vision;
 
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+
+    private Vision vision;
+
+    public void setVision(Vision v) {
+        this.vision = v;
+    }
+
+    public double getYawToHub() {
+        if (vision == null) return Double.NaN;
+        return vision.getYawToHub();
+    }
+
+    public double getDistanceToHub() { 
+        if (vision == null) return Double.NaN; 
+        return vision.getDistanceToHub(); 
+    }
+
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-
-    // *** REMOVED: private final Pigeon2 pigeon = new Pigeon2(2, "5980"); ***
 
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
@@ -184,11 +199,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
     }
 
-    // *** REMOVED: getHeading() and zeroHeading() because they used the wrong Pigeon ***
-
-    // -------------------------------------------------------------------------
-    // ⭐ NEW — Minimal addition: Calibrate module offsets
-    // -------------------------------------------------------------------------
     public void calibrateOffsets() {
         for (var module : this.getModules()) {
             CANcoder cancoder = module.getEncoder();

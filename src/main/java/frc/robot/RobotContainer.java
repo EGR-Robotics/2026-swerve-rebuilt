@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AutoFaceHubCommand;
 import frc.robot.commands.FeedFromNeutral;
 import frc.robot.commands.FeedFromOpposite;
 import frc.robot.generated.TunerConstants;
@@ -22,6 +23,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); 
@@ -44,12 +46,16 @@ public class RobotContainer {
     public Shooter shooter = new Shooter();
     public Climber climber = new Climber();
     public Intake intake = new Intake();
+    public Vision vision = new Vision();
+
 
     public RobotContainer() {
         configureBindings();
     }
 
     private void configureBindings() {
+
+        drivetrain.setVision(vision);
 
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
@@ -105,6 +111,11 @@ public class RobotContainer {
 
         driverController.x().whileTrue(new FeedFromNeutral(shooter));
         driverController.b().whileTrue(new FeedFromOpposite(shooter));
+        
+        driverController.a().whileTrue(
+            new AutoFaceHubCommand(drivetrain)
+        );
+
 
         driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
