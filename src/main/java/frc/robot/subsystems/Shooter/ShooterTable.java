@@ -1,6 +1,4 @@
-package frc.robot;
-
-import frc.robot.subsystems.Shooter;
+package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 

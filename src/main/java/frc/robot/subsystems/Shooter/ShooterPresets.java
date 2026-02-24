@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems.Shooter;
 
 public class ShooterPresets {
     // Neutral zone shot (example values)

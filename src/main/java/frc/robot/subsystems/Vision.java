@@ -17,7 +17,7 @@ public class Vision {
     private static final int[] BLUE_CLIMB_TAGS = {9};
     private static final int[] RED_CLIMB_TAGS  = {10};
 
-    // ⭐ IMPORTANT: Replace this with the REAL field measurement (meters)
+    // Replace this with the REAL field measurement (meters)
     private static final double HUB_TO_CLIMB_DISTANCE = 3.00; // <-- UPDATE THIS
 
     public Vision() {}

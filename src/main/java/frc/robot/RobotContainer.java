@@ -22,8 +22,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Shooter.Shooter;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); 
@@ -105,7 +105,7 @@ public class RobotContainer {
             })
         );
 
-        //Consider changigng so we can make y a preset shoot in hub angle + speed
+        //Consider changing so we can make y a preset shoot in hub angle + speed
         driverController.y().onTrue(
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
         );
@@ -114,10 +114,7 @@ public class RobotContainer {
         driverController.b().whileTrue(new FeedFromOpposite(shooter));
         
         //Eventually will add autoshootaligncommand to this, but for testing first leave just autofacehub
-        driverController.a().whileTrue(
-            new AutoFaceHubCommand(drivetrain)
-        );
-
+        driverController.a().whileTrue(new AutoFaceHubCommand(drivetrain));
 
         driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
