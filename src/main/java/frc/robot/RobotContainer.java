@@ -59,9 +59,10 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed)
-                    .withVelocityY(-driverController.getLeftX() * MaxSpeed)
-                    .withRotationalRate(-driverController.getRightX() * MaxAngularRate)
+                // *** FIXED AXIS SWAP HERE ***
+                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed)   // forward/back
+                     .withVelocityY(-driverController.getLeftX() * MaxSpeed)   // strafe
+                     .withRotationalRate(-driverController.getRightX() * MaxAngularRate)
             )
         );
 
@@ -90,12 +91,12 @@ public class RobotContainer {
                     driverController.b().getAsBoolean();
 
                 if (autoAlignActive) {
-                    shooter.setFeederSpeed(3000);
-                    shooter.setRollerRPM(3000);
+                    shooter.setFeederSpeed(9000);
+                    shooter.setRollerRPM(9000);
                 } else {
-                    shooter.setFeederSpeed(3000);
-                    shooter.setRollerRPM(3000);
-                    shooter.setFlywheelRPM(800); // tune spit-out RPM 
+                    shooter.setFeederSpeed(9000);
+                    shooter.setRollerRPM(9000);
+                    shooter.setFlywheelRPM(1000); // tune spit-out RPM 
                 }
 
             }, shooter).finallyDo(() -> {
@@ -105,15 +106,17 @@ public class RobotContainer {
             })
         );
 
-        //Consider changing so we can make y a preset shoot in hub angle + speed
         driverController.y().onTrue(
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
         );
 
-        driverController.x().whileTrue(new FeedFromNeutral(shooter));
-        driverController.b().whileTrue(new FeedFromOpposite(shooter));
+        driverController.rightBumper().onTrue(
+            drivetrain.runOnce(() -> drivetrain.calibrateOffsets())
+        );
+
+        driverController.b().whileTrue(new FeedFromNeutral(shooter));
+        driverController.x().whileTrue(new FeedFromOpposite(shooter));
         
-        //Eventually will add autoshootaligncommand to this, but for testing first leave just autofacehub
         driverController.a().whileTrue(new AutoFaceHubCommand(drivetrain));
 
         driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
@@ -123,8 +126,8 @@ public class RobotContainer {
 
         // ---------------- OPERATOR CONTROLS ----------------
 
-        shooter.setDefaultCommand(
-            new RunCommand(() -> {
+        operatorController.leftTrigger().whileTrue(
+        new RunCommand(() -> {
                 double hoodTrigger = operatorController.getLeftTriggerAxis();
                 if (hoodTrigger > 0.05) {
                     double minAngle = 40;
@@ -132,7 +135,7 @@ public class RobotContainer {
                     double angle = maxAngle - hoodTrigger * (maxAngle - minAngle);
                     shooter.setHoodAngle(angle);
                 }
-            }, shooter)
+            }, shooter).finallyDo(() -> shooter.setHoodAngle(0))
         );
 
         operatorController.rightTrigger().whileTrue(
@@ -164,6 +167,11 @@ public class RobotContainer {
 
         operatorController.leftBumper().whileTrue(
             new RunCommand(() -> intake.lowerIntake(), intake)
+                .finallyDo(() -> intake.stopPivot())
+        );
+
+        operatorController.rightBumper().whileTrue(
+            new RunCommand(() -> intake.raiseIntake(), intake)
                 .finallyDo(() -> intake.stopPivot())
         );
 

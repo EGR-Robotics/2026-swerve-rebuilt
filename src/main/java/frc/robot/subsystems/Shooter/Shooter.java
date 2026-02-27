@@ -21,8 +21,8 @@ public class Shooter extends SubsystemBase {
     private static final double FLYWHEEL_GEAR_RATIO = 1.0;
     private static final double HOOD_GEAR_RATIO = 50.0;
 
-    private static final double MIN_ANGLE = 40;
-    private static final double MAX_ANGLE = 80;
+    private final double min_angle;
+    private final double max_angle;
 
     private static final double RPM_TOL = 100;
     private static final double ANGLE_TOL = 1.0;
@@ -47,6 +47,9 @@ public class Shooter extends SubsystemBase {
         shooterFeeder.setNeutralMode(NeutralModeValue.Coast);
         roller.setNeutralMode(NeutralModeValue.Coast);
 
+        min_angle = getAngleFromRotations(hood.getRotorPosition().getValueAsDouble());
+        max_angle = min_angle + 20;
+
         TalonFXConfiguration flyCfg = new TalonFXConfiguration();
 
         flyCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
@@ -68,7 +71,7 @@ public class Shooter extends SubsystemBase {
         
         hoodCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
         
-        hoodCfg.Slot0.kP = 2.0;//tune maybe
+        hoodCfg.Slot0.kP = 0.1;//tune maybe
         hoodCfg.Slot0.kI = 0.0;
         hoodCfg.Slot0.kD = 0.0;
         
@@ -99,6 +102,13 @@ public class Shooter extends SubsystemBase {
         roller.getConfigurator().apply(rollerCfg, 0.25);
     }
 
+    public double getAngleFromRotations(double rotations){
+        return rotations * 360.0 / HOOD_GEAR_RATIO;
+    }
+    public double getRotationsFromAngle(double angle){
+        return (angle / 360.0) * HOOD_GEAR_RATIO;
+    }
+
     public void setFlywheelRPM(double rpm) {
         goalRPM = rpm;
         double motorRPS = -(rpm / 60.0) * FLYWHEEL_GEAR_RATIO;
@@ -115,7 +125,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setRollerRPM(double rpm){
-        double motorRPS = rpm / 60.0;
+        double motorRPS = -rpm / 60.0;
         roller.setControl(rollerReq.withVelocity(motorRPS));
     }
 
@@ -126,14 +136,13 @@ public class Shooter extends SubsystemBase {
     public void feedAndFlywheel(double rpm){
         setFlywheelRPM(rpm);
         setFeederSpeed(rpm);
-        setRollerRPM(2000); 
+        setRollerRPM(5000); 
     }
 
     public void setHoodAngle(double deg) {
-        deg = Math.max(MIN_ANGLE, Math.min(MAX_ANGLE, deg));
-        goalAngle = deg;
-        double motorRot = (deg / 360.0) * HOOD_GEAR_RATIO;
-        hood.setControl(hoodReq.withPosition(motorRot));
+        goalAngle = Math.max(min_angle, Math.min(max_angle, deg));
+
+        hood.setControl(hoodReq.withPosition(getRotationsFromAngle(goalAngle)));
     }
 
     public double getFlywheelRPM() {

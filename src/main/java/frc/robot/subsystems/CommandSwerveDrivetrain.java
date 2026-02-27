@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
-// *** REMOVED: import com.ctre.phoenix6.hardware.Pigeon2; ***
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -18,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,8 +50,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
+    // These are no longer used, but kept for completeness
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
+
     private boolean m_hasAppliedOperatorPerspective = false;
 
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
@@ -155,16 +155,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
-        if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
-            DriverStation.getAlliance().ifPresent(allianceColor -> {
-                setOperatorPerspectiveForward(
-                    allianceColor == Alliance.Red
-                        ? kRedAlliancePerspectiveRotation
-                        : kBlueAlliancePerspectiveRotation
-                );
-                m_hasAppliedOperatorPerspective = true;
-            });
-        }
+
+        // *** FIX: Force forward direction to 180 degrees because Pigeon arrow points backward ***
+        setOperatorPerspectiveForward(Rotation2d.k180deg);
+        m_hasAppliedOperatorPerspective = true;
     }
 
     private void startSimThread() {

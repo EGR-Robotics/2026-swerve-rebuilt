@@ -28,7 +28,7 @@ public class FeedFromNeutral extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        shooter.feedAndFlywheel(0);
+        shooter.setFlywheelRPM(0);
     }
 
     @Override

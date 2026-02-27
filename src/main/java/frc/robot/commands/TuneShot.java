@@ -16,9 +16,8 @@ public class TuneShot extends Command {
     // Shooter offset from robot center (meters)
     private static final Translation2d SHOOTER_OFFSET = new Translation2d(0.3, 0.0);
 
-    // Target location on field (example: speaker)
-    private static final Translation2d TARGET_POS = new Translation2d(0, 5.55);
-
+    // Target location on field (hub)
+    private static final Translation2d TARGET_POS = new Translation2d(0, 1.829);
     public TuneShot(Shooter shooter, CommandSwerveDrivetrain drivetrain) {
         this.shooter = shooter;
         this.drivetrain = drivetrain;
