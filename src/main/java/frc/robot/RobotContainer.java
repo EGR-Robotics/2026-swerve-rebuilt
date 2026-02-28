@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -26,9 +27,18 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter.Shooter;
 
 public class RobotContainer {
-    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); 
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); 
+
+    private double MaxSpeed = 0.5 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); //speed set to 50%, can change if needed.
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); //speed for rotating set to 75%, can change if needed.
     private double MAX_RPM = 5000;
+
+    private final SlewRateLimiter xLimiter = new SlewRateLimiter(3.0);
+    private final SlewRateLimiter yLimiter = new SlewRateLimiter(3.0);
+    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3.0);
+
+    private double shape(double input) {
+        return Math.copySign(input * input * input, input);
+    }
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
@@ -58,11 +68,24 @@ public class RobotContainer {
         drivetrain.setVision(vision);
 
         drivetrain.setDefaultCommand(
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed)
-                     .withVelocityY(-driverController.getLeftX() * MaxSpeed)
-                     .withRotationalRate(-driverController.getRightX() * MaxAngularRate)
-            )
+            drivetrain.applyRequest(() -> {
+
+                double x = -driverController.getLeftY();
+                double y = -driverController.getLeftX();
+                double rot = -driverController.getRightX();
+
+                double shapedX = shape(x);
+                double shapedY = shape(y);
+                double shapedRot = shape(rot);
+
+                double limitedX = xLimiter.calculate(shapedX);
+                double limitedY = yLimiter.calculate(shapedY);
+                double limitedRot = rotLimiter.calculate(shapedRot);
+
+                return drive.withVelocityX(limitedX * MaxSpeed)
+                            .withVelocityY(limitedY * MaxSpeed)
+                            .withRotationalRate(limitedRot * MaxAngularRate);
+            })
         );
 
         final var idle = new SwerveRequest.Idle();
@@ -121,7 +144,6 @@ public class RobotContainer {
 
         // ---------------- OPERATOR CONTROLS ----------------
 
-        // *** FIXED MANUAL HOOD CONTROL ***
         operatorController.leftTrigger().whileTrue(
             new RunCommand(() -> {
                 double hoodTrigger = operatorController.getLeftTriggerAxis();
