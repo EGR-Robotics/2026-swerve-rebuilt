@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -17,26 +18,28 @@ public class Shooter extends SubsystemBase {
     
     private final TalonFX roller = new TalonFX(25, "5980");
     private final TalonFX shooterFeeder = new TalonFX(50, "5980");
-    
+
+    private final CANcoder hoodEncoder = new CANcoder(8, "5980");
+
     private static final double FLYWHEEL_GEAR_RATIO = 1.0;
     private static final double HOOD_GEAR_RATIO = 50.0;
 
-    private final double min_angle;
-    private final double max_angle;
+    // HARD‑CODED ABSOLUTE OFFSET (your measured value)
+    private static final double HOOD_ABS_ZERO = -0.048584;
+
+    // Hood travel limits in DEGREES
+    private static final double MIN_ANGLE = 0.0;
+    private static final double MAX_ANGLE = 40.0;
 
     private static final double RPM_TOL = 100;
     private static final double ANGLE_TOL = 1.0;
-
-    private static double feederSpeed = 1;
-    private static final double voltageNumber = 12;
 
     private double goalRPM = 0;
     private double goalAngle = 60;
 
     private final VelocityVoltage flywheelReq = new VelocityVoltage(0).withEnableFOC(true);
     private final VelocityVoltage feederReq = new VelocityVoltage(0).withEnableFOC(true);
-
-    private final VelocityVoltage rollerReq = new VelocityVoltage(0).withEnableFOC(true); // ADDED
+    private final VelocityVoltage rollerReq = new VelocityVoltage(0).withEnableFOC(true);
 
     private final PositionVoltage hoodReq = new PositionVoltage(0).withEnableFOC(true);
 
@@ -47,64 +50,51 @@ public class Shooter extends SubsystemBase {
         shooterFeeder.setNeutralMode(NeutralModeValue.Coast);
         roller.setNeutralMode(NeutralModeValue.Coast);
 
-        min_angle = getAngleFromRotations(hood.getRotorPosition().getValueAsDouble());
-        max_angle = min_angle + 20;
-
+        // Flywheel config
         TalonFXConfiguration flyCfg = new TalonFXConfiguration();
-
         flyCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-
-        //flywheel
-        flyCfg.Slot0.kP = 0.18;//tune
+        flyCfg.Slot0.kP = 0.18;
         flyCfg.Slot0.kI = 0.0;
         flyCfg.Slot0.kD = 0.0;
-        
-        flyCfg.Slot0.kV = 0.12;//tune
+        flyCfg.Slot0.kV = 0.12;
         flyCfg.Slot0.kS = 0.0;
-
         flyCfg.Feedback.SensorToMechanismRatio = FLYWHEEL_GEAR_RATIO;
-
         flywheel.getConfigurator().apply(flyCfg, 0.25);
 
-        //hood
+        // Hood config
         TalonFXConfiguration hoodCfg = new TalonFXConfiguration();
-        
         hoodCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        
-        hoodCfg.Slot0.kP = 0.1;//tune maybe
+        hoodCfg.Slot0.kP = 0.1;
         hoodCfg.Slot0.kI = 0.0;
         hoodCfg.Slot0.kD = 0.0;
-        
         hoodCfg.Feedback.SensorToMechanismRatio = HOOD_GEAR_RATIO;
-        
         hood.getConfigurator().apply(hoodCfg, 0.25);
 
-        //feeder
+        // Feeder config
         TalonFXConfiguration feederCfg = new TalonFXConfiguration();
-        
         feederCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        
-        feederCfg.Slot0.kP = 0.1;//tune maybe
+        feederCfg.Slot0.kP = 0.1;
         feederCfg.Slot0.kI = 0.0;
         feederCfg.Slot0.kD = 0.0;
-        
         shooterFeeder.getConfigurator().apply(feederCfg, 0.25);
 
-        //rollers
+        // Roller config
         TalonFXConfiguration rollerCfg = new TalonFXConfiguration();
-        
         rollerCfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        
-        rollerCfg.Slot0.kP = 0.1;//tune maybe
+        rollerCfg.Slot0.kP = 0.1;
         rollerCfg.Slot0.kI = 0.0;
         rollerCfg.Slot0.kD = 0.0;
-        
         roller.getConfigurator().apply(rollerCfg, 0.25);
+
+        // Prevent hood from moving on enable
+        hood.setControl(new VoltageOut(0));
     }
 
+    // Convert motor rotations <-> hood angle
     public double getAngleFromRotations(double rotations){
         return rotations * 360.0 / HOOD_GEAR_RATIO;
     }
+
     public double getRotationsFromAngle(double angle){
         return (angle / 360.0) * HOOD_GEAR_RATIO;
     }
@@ -135,13 +125,12 @@ public class Shooter extends SubsystemBase {
 
     public void feedAndFlywheel(double rpm){
         setFlywheelRPM(rpm);
-        setFeederSpeed(rpm);
-        setRollerRPM(5000); 
+        //setFeederSpeed(rpm);
+        //setRollerRPM(5000);
     }
 
     public void setHoodAngle(double deg) {
-        goalAngle = Math.max(min_angle, Math.min(max_angle, deg));
-
+        goalAngle = Math.max(MIN_ANGLE, Math.min(MAX_ANGLE, deg));
         hood.setControl(hoodReq.withPosition(getRotationsFromAngle(goalAngle)));
     }
 
@@ -150,9 +139,22 @@ public class Shooter extends SubsystemBase {
         return (motorRPS / FLYWHEEL_GEAR_RATIO) * 60.0;
     }
 
+    // Convert CANcoder absolute to real hood angle using hardcoded offset
     public double getHoodAngle() {
-        double motorRot = hood.getPosition().getValueAsDouble();
-        return (motorRot / HOOD_GEAR_RATIO) * 360.0;
+        double abs = hoodEncoder.getAbsolutePosition().getValueAsDouble();
+
+        // Normalize absolute into 0–1 range even if negative
+        while (abs < 0) abs += 1.0;
+        while (abs >= 1) abs -= 1.0;
+
+        // Apply your hardcoded offset
+        double corrected = abs - HOOD_ABS_ZERO;
+
+        // Wrap corrected value into 0–1
+        while (corrected < 0) corrected += 1.0;
+        while (corrected >= 1) corrected -= 1.0;
+
+        return corrected * 360.0;
     }
 
     public boolean readyToShoot() {

@@ -59,9 +59,8 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() ->
-                // *** FIXED AXIS SWAP HERE ***
-                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed)   // forward/back
-                     .withVelocityY(-driverController.getLeftX() * MaxSpeed)   // strafe
+                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed)
+                     .withVelocityY(-driverController.getLeftX() * MaxSpeed)
                      .withRotationalRate(-driverController.getRightX() * MaxAngularRate)
             )
         );
@@ -96,7 +95,7 @@ public class RobotContainer {
                 } else {
                     shooter.setFeederSpeed(9000);
                     shooter.setRollerRPM(9000);
-                    shooter.setFlywheelRPM(1000); // tune spit-out RPM 
+                    shooter.setFlywheelRPM(1000);
                 }
 
             }, shooter).finallyDo(() -> {
@@ -108,10 +107,6 @@ public class RobotContainer {
 
         driverController.y().onTrue(
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
-        );
-
-        driverController.rightBumper().onTrue(
-            drivetrain.runOnce(() -> drivetrain.calibrateOffsets())
         );
 
         driverController.b().whileTrue(new FeedFromNeutral(shooter));
@@ -126,8 +121,9 @@ public class RobotContainer {
 
         // ---------------- OPERATOR CONTROLS ----------------
 
+        // *** FIXED MANUAL HOOD CONTROL ***
         operatorController.leftTrigger().whileTrue(
-        new RunCommand(() -> {
+            new RunCommand(() -> {
                 double hoodTrigger = operatorController.getLeftTriggerAxis();
                 if (hoodTrigger > 0.05) {
                     double minAngle = 40;
@@ -135,7 +131,9 @@ public class RobotContainer {
                     double angle = maxAngle - hoodTrigger * (maxAngle - minAngle);
                     shooter.setHoodAngle(angle);
                 }
-            }, shooter).finallyDo(() -> shooter.setHoodAngle(0))
+            }, shooter)
+        ).onFalse(
+            new InstantCommand(() -> shooter.setHoodAngle(0), shooter)
         );
 
         operatorController.rightTrigger().whileTrue(
@@ -165,14 +163,20 @@ public class RobotContainer {
                 .finallyDo(() -> climber.stop())
         );
 
-        operatorController.leftBumper().whileTrue(
-            new RunCommand(() -> intake.lowerIntake(), intake)
-                .finallyDo(() -> intake.stopPivot())
+        operatorController.leftBumper().onTrue(
+            new InstantCommand(() -> intake.lowerIntake(), intake)
         );
 
-        operatorController.rightBumper().whileTrue(
-            new RunCommand(() -> intake.raiseIntake(), intake)
-                .finallyDo(() -> intake.stopPivot())
+        operatorController.rightBumper().onTrue(
+            new InstantCommand(() -> intake.raiseIntake(), intake)
+        );
+
+        operatorController.leftBumper().onFalse(
+            new InstantCommand(() -> intake.stopPivot(), intake)
+        );
+
+        operatorController.rightBumper().onFalse(
+            new InstantCommand(() -> intake.stopPivot(), intake)
         );
 
         drivetrain.registerTelemetry(logger::telemeterize);
