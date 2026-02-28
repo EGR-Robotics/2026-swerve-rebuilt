@@ -34,9 +34,9 @@ public class AutoShooterAlignCommand extends Command {
         shooter.setHoodAngle(set.angle());
         shooter.setFlywheelRPM(set.rpm());
 
-        if (shooter.readyToShoot()) {
-            shooter.setFeederSpeed(ShooterPresets.NEUTRAL_RPM);
-        }
+        // if (shooter.readyToShoot()) {
+        //     shooter.setFeederSpeed(ShooterPresets.NEUTRAL_RPM);
+        // }
     }
 
     @Override

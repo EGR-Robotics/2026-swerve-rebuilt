@@ -16,20 +16,22 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AgainstHubShot;
 import frc.robot.commands.AutoFaceHubCommand;
 import frc.robot.commands.FeedFromNeutral;
 import frc.robot.commands.FeedFromOpposite;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber; 
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Feed;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter.Shooter;
 
 public class RobotContainer {
 
-    private double MaxSpeed = 0.5 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); //speed set to 50%, can change if needed.
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); //speed for rotating set to 75%, can change if needed.
+    private double MaxSpeed = 0.5 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
     private double MAX_RPM = 5000;
 
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(3.0);
@@ -55,6 +57,7 @@ public class RobotContainer {
 
     public Shooter shooter = new Shooter();
     public Climber climber = new Climber();
+    public Feed feed = new Feed();
     public Intake intake = new Intake();
     public Vision vision = new Vision();
 
@@ -106,32 +109,15 @@ public class RobotContainer {
         );
 
         driverController.rightTrigger().whileTrue(
-            new RunCommand(() -> {
-
-                boolean autoAlignActive =
-                    driverController.x().getAsBoolean() ||
-                    driverController.b().getAsBoolean();
-
-                if (autoAlignActive) {
-                    shooter.setFeederSpeed(9000);
-                    shooter.setRollerRPM(9000);
-                } else {
-                    shooter.setFeederSpeed(9000);
-                    shooter.setRollerRPM(9000);
-                    shooter.setFlywheelRPM(1000);
-                }
-
-            }, shooter).finallyDo(() -> {
-                shooter.stopFeeder();
-                shooter.stopRoller();
-                shooter.setFlywheelRPM(0);
-            })
+            new RunCommand(() -> feed.feedFuel(9000), 
+            feed).finallyDo(() -> feed.stopFeed(0))
         );
 
-        driverController.y().onTrue(
+        driverController.povUp().onTrue(
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
         );
 
+        driverController.y().whileTrue(new AgainstHubShot(shooter));
         driverController.b().whileTrue(new FeedFromNeutral(shooter));
         driverController.x().whileTrue(new FeedFromOpposite(shooter));
         
@@ -143,27 +129,23 @@ public class RobotContainer {
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // ---------------- OPERATOR CONTROLS ----------------
-
+        
         operatorController.leftTrigger().whileTrue(
             new RunCommand(() -> {
-                double hoodTrigger = operatorController.getLeftTriggerAxis();
-                if (hoodTrigger > 0.05) {
-                    double minAngle = 40;
-                    double maxAngle = 80;
-                    double angle = maxAngle - hoodTrigger * (maxAngle - minAngle);
-                    shooter.setHoodAngle(angle);
-                }
+                double trigger = operatorController.getLeftTriggerAxis(); // 0 → 1
+                double angle = trigger * Shooter.max_angle;               // min_angle = 0
+                shooter.setHoodAngle(angle);
             }, shooter)
         ).onFalse(
-            new InstantCommand(() -> shooter.setHoodAngle(0), shooter)
+            new InstantCommand(() -> shooter.setHoodAngle(Shooter.min_angle), shooter)
         );
 
         operatorController.rightTrigger().whileTrue(
             new RunCommand(() -> {
                 double flywheelTrigger = operatorController.getRightTriggerAxis();
                 double rpm = flywheelTrigger * MAX_RPM;
-                shooter.feedAndFlywheel(rpm);
-            }, shooter).finallyDo(() -> shooter.feedAndFlywheel(0))
+                shooter.setFlywheelRPM(rpm);
+            }, shooter).finallyDo(() -> shooter.setFlywheelRPM(0))
         );
 
         operatorController.y().onTrue(
@@ -189,9 +171,9 @@ public class RobotContainer {
             new InstantCommand(() -> intake.lowerIntake(), intake)
         );
 
-        operatorController.rightBumper().onTrue(
-            new InstantCommand(() -> intake.raiseIntake(), intake)
-        );
+        // operatorController.rightBumper().onTrue(
+        //     new InstantCommand(() -> intake.raiseIntake(), intake)
+        // );
 
         operatorController.leftBumper().onFalse(
             new InstantCommand(() -> intake.stopPivot(), intake)

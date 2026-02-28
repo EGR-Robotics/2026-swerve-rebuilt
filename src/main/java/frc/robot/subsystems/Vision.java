@@ -18,7 +18,9 @@ public class Vision {
     // Replace this with the REAL field measurement (meters)
     private static final double HUB_TO_CLIMB_DISTANCE = 3.00; //Todo: <-- UPDATE THIS
 
-    public Vision() {}
+    public Vision() {
+        LimelightHelpers.setPipelineIndex("limelight-front", 0);
+    }
 
     /** Returns yaw error to hub or fallback climb tag direction */
     public double getYawToHub() {

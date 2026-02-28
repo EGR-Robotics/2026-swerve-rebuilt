@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase {
     private static final double hysteresis = 1.0;    // degrees
 
     // HARD‑CODED OFFSET (your value goes here)
-    private static final double pivotUpOffset = 0.3842; // <<< replace with your measured absolute
+    private static final double pivotUpOffset = 0.3842; // <<<\replace with your measured absolute
 
     private final double pivotUpPosition;
     private final double pivotDownPosition;
@@ -66,10 +66,10 @@ public class Intake extends SubsystemBase {
         intakePivot.setControl(pivotRequest.withPosition(pivotDownPosition));
     }
 
-    public void raiseIntake() {
-        if (this.isIntakeUp()) return;
-        intakePivot.setControl(pivotRequest.withPosition(pivotUpPosition));
-    }
+    // public void raiseIntake() {
+    //     if (this.isIntakeUp()) return;
+    //     intakePivot.setControl(pivotRequest.withPosition(pivotUpPosition));
+    // }
 
     public void stopPivot() {
         intakePivot.setControl(new VoltageOut(0));

@@ -21,9 +21,9 @@ public class FeedFromNeutral extends Command {
 
     @Override
     public void execute() {
-        if (shooter.readyToShoot()) {
-            shooter.setFeederSpeed(ShooterPresets.NEUTRAL_RPM);
-        }
+        // if (shooter.readyToShoot()) {
+        //     shooter.setFeederSpeed(ShooterPresets.NEUTRAL_RPM);
+        // }
     }
 
     @Override

@@ -21,14 +21,14 @@ public class AgainstHubShot extends Command {
 
     @Override
     public void execute() {
-        if (shooter.readyToShoot()) {
-            shooter.setFeederSpeed(ShooterPresets.HUB_RPM);
-        }
+        // if (shooter.readyToShoot()) {
+        //     shooter.setFeederSpeed(ShooterPresets.HUB_RPM);
+        // }
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.feedAndFlywheel(0);
+        shooter.setFlywheelRPM(0);
     }
 
     @Override
