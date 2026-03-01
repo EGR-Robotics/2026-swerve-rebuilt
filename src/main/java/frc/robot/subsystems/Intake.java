@@ -17,15 +17,15 @@ public class Intake extends SubsystemBase {
 
     private final PositionVoltage pivotRequest = new PositionVoltage(0);
 
-    private static final double intakeSpeed = 0.9;
+    private static final double intakeSpeed = 1.5;
     private static final double lowerIntakeSpeed = 0.9;
     private static final double raiseIntakeSpeed = -1.0;
     private static final double voltageNumber = 12;
-    private static final double intakeRotation = 210; // degrees
+    private static final double intakeRotation = 240; // degrees
     private static final double hysteresis = 1.0;    // degrees
 
     // HARD‑CODED OFFSET (your value goes here)
-    private static final double pivotUpOffset = 0.3842; // <<<\replace with your measured absolute
+    private static final double pivotUpOffset = 0.767090; // <<<\replace with your measured absolute
 
     private final double pivotUpPosition;
     private final double pivotDownPosition;
@@ -43,8 +43,8 @@ public class Intake extends SubsystemBase {
         
         intakePivot.getConfigurator().apply(cfg);
 
-        pivotUpPosition = pivotUpOffset;
-        pivotDownPosition = pivotUpOffset + (intakeRotation / 360.0);
+        pivotUpPosition = 0.737549;
+        pivotDownPosition = 0.767090;
 
         intakePivot.setControl(new VoltageOut(0));
     }
@@ -66,10 +66,10 @@ public class Intake extends SubsystemBase {
         intakePivot.setControl(pivotRequest.withPosition(pivotDownPosition));
     }
 
-    // public void raiseIntake() {
-    //     if (this.isIntakeUp()) return;
-    //     intakePivot.setControl(pivotRequest.withPosition(pivotUpPosition));
-    // }
+    public void raiseIntake() {
+        if (this.isIntakeUp()) return;
+        intakePivot.setControl(pivotRequest.withPosition(pivotUpPosition));
+    }
 
     public void stopPivot() {
         intakePivot.setControl(new VoltageOut(0));

@@ -108,6 +108,11 @@ public class RobotContainer {
                 .finallyDo(() -> intake.stopRoller())
         );
 
+        driverController.rightBumper().whileTrue(
+            new RunCommand(() -> feed.reverseRoller(9000), feed)
+                .finallyDo(() -> feed.stopRoller())
+        );
+
         driverController.rightTrigger().whileTrue(
             new RunCommand(() -> feed.feedFuel(9000), 
             feed).finallyDo(() -> feed.stopFeed(0))
@@ -171,9 +176,9 @@ public class RobotContainer {
             new InstantCommand(() -> intake.lowerIntake(), intake)
         );
 
-        // operatorController.rightBumper().onTrue(
-        //     new InstantCommand(() -> intake.raiseIntake(), intake)
-        // );
+        operatorController.rightBumper().onTrue(
+            new InstantCommand(() -> intake.raiseIntake(), intake)
+        );
 
         operatorController.leftBumper().onFalse(
             new InstantCommand(() -> intake.stopPivot(), intake)

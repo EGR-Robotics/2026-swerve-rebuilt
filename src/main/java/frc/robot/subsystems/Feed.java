@@ -59,6 +59,10 @@ public class Feed extends SubsystemBase{
         setFeederSpeed(rpm);
     }
 
+    public void reverseRoller(double rpm){
+        setRollerRPM(-rpm);
+    }
+
      public void stopFeed(double rpm){
         stopRoller();
         stopFeeder();
