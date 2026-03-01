@@ -6,11 +6,12 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -21,7 +22,7 @@ import frc.robot.commands.AutoFaceHubCommand;
 import frc.robot.commands.FeedFromNeutral;
 import frc.robot.commands.FeedFromOpposite;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climber; 
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feed;
 import frc.robot.subsystems.Intake;
@@ -60,7 +61,6 @@ public class RobotContainer {
     public Feed feed = new Feed();
     public Intake intake = new Intake();
     public Vision vision = new Vision();
-
 
     public RobotContainer() {
         configureBindings();
@@ -137,8 +137,8 @@ public class RobotContainer {
         
         operatorController.leftTrigger().whileTrue(
             new RunCommand(() -> {
-                double trigger = operatorController.getLeftTriggerAxis(); // 0 → 1
-                double angle = trigger * Shooter.max_angle;               // min_angle = 0
+                double trigger = operatorController.getLeftTriggerAxis();
+                double angle = trigger * Shooter.max_angle;
                 shooter.setHoodAngle(angle);
             }, shooter)
         ).onFalse(
@@ -191,17 +191,8 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
+    // ---------------- AUTONOMOUS ----------------
     public Command getAutonomousCommand() {
-        final var idle = new SwerveRequest.Idle();
-        return Commands.sequence(
-            drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(0.5)
-                    .withVelocityY(0)
-                    .withRotationalRate(0)
-            )
-            .withTimeout(5.0),
-            drivetrain.applyRequest(() -> idle)
-        );
+        return new PathPlannerAuto("New Auto");
     }
 }
