@@ -1,11 +1,11 @@
 package frc.robot.subsystems.Shooter;
 
 public class ShooterPresets {
-    // Neutral zone shot (example values)
+    // Neutral zone shot 
     public static final double NEUTRAL_RPM = 1900;
     public static final double NEUTRAL_ANGLE = 20;
 
-    // Opposite alliance zone shot (example values)
+    // Opposite alliance zone shot 
     public static final double OPPOSITE_RPM = 2600;
     public static final double OPPOSITE_ANGLE = 25;
 
@@ -18,6 +18,6 @@ public class ShooterPresets {
     public static final double CLIMB_RIGHT_ANGLE = 0;
 
     //outpost
-    public static final double CORNER_RIGHT_RPM = 2750;
-    public static final double CORNER_RIGHT_ANGLE = 0;
+    public static final double OUTPOST_RPM = 2750;
+    public static final double OUTPOST_ANGLE = 0;
 }

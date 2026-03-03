@@ -4,19 +4,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.ShooterPresets;
 
-public class AgainstHubShot extends Command {
+public class ByOutpostShot extends Command {
 
     private final Shooter shooter;
 
-    public AgainstHubShot(Shooter shooter) {
+    public ByOutpostShot(Shooter shooter) {
         this.shooter = shooter;
         addRequirements(shooter);
     }
 
     @Override
     public void initialize() {
-        shooter.setHoodAngle(ShooterPresets.HUB_ANGLE);
-        shooter.setFlywheelRPM(ShooterPresets.HUB_RPM);
+        shooter.setHoodAngle(ShooterPresets.OUTPOST_ANGLE);
+        shooter.setFlywheelRPM(ShooterPresets.OUTPOST_RPM);
     }
 
     @Override
