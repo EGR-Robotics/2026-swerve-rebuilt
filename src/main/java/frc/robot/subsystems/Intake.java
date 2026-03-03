@@ -13,44 +13,36 @@ public class Intake extends SubsystemBase {
 
     private final TalonFX intakeRoller = new TalonFX(27, "5980");
     private final TalonFX intakePivot = new TalonFX(26, "5980");
-    private final CANcoder pivotEncoder = new CANcoder(9, "5980"); 
+    private final CANcoder pivotEncoder = new CANcoder(9, "5980");
 
     private final PositionVoltage pivotRequest = new PositionVoltage(0);
 
     private static final double intakeSpeed = 1.5;
-    private static final double lowerIntakeSpeed = 0.9;
-    private static final double raiseIntakeSpeed = -1.0;
     private static final double voltageNumber = 12;
-    private static final double intakeRotation = 240; // degrees
-    private static final double hysteresis = 1.0;    // degrees
+    private static final double hysteresis = 1.0; // degrees
 
-    // HARD‑CODED OFFSET (your value goes here)
-    private static final double pivotUpOffset = 0.767090; // <<<\replace with your measured absolute
-
-    private final double pivotUpPosition;
-    private final double pivotDownPosition;
+    // TODO: Verify these with your actual CANcoder readings
+    // Read pivotEncoder.getAbsolutePosition() in Tuner X with intake fully UP and fully DOWN
+    private static final double pivotUpPosition   = 0.737549; // CANcoder reading when intake is UP
+    private static final double pivotDownPosition = 0.767090; // CANcoder reading when intake is DOWN
 
     public Intake() {
 
         TalonFXConfiguration cfg = new TalonFXConfiguration();
-        
+
         cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        cfg.Feedback.FeedbackRemoteSensorID = 9; 
-        
-        cfg.Slot0.kP = 6.0;  
+        cfg.Feedback.FeedbackRemoteSensorID = 9;
+
+        cfg.Slot0.kP = 6.0;
         cfg.Slot0.kI = 0.0;
         cfg.Slot0.kD = 0.0;
-        
+
         intakePivot.getConfigurator().apply(cfg);
-
-        pivotUpPosition = 0.737549;
-        pivotDownPosition = 0.767090;
-
         intakePivot.setControl(new VoltageOut(0));
     }
 
     public void intake(double triggerVal) {
-        intakeRoller.setControl(new VoltageOut(-triggerVal * intakeSpeed * voltageNumber)); 
+        intakeRoller.setControl(new VoltageOut(-triggerVal * intakeSpeed * voltageNumber));
     }
 
     public void reverseIntake() {
@@ -58,16 +50,16 @@ public class Intake extends SubsystemBase {
     }
 
     public void stopRoller() {
-        intakeRoller.setControl(new VoltageOut(0)); 
+        intakeRoller.setControl(new VoltageOut(0));
     }
 
     public void lowerIntake() {
-        if (this.isIntakeDown()) return;
+        if (isIntakeDown()) return;
         intakePivot.setControl(pivotRequest.withPosition(pivotDownPosition));
     }
 
     public void raiseIntake() {
-        if (this.isIntakeUp()) return;
+        if (isIntakeUp()) return;
         intakePivot.setControl(pivotRequest.withPosition(pivotUpPosition));
     }
 
@@ -81,22 +73,14 @@ public class Intake extends SubsystemBase {
     }
 
     private double getPivotPosition() {
-        double abs = pivotEncoder.getAbsolutePosition().getValueAsDouble();
-
-        double corrected = abs - pivotUpOffset;
-        if (corrected < 0) corrected += 1.0;
-        if (corrected > 1) corrected -= 1.0;
-
-        return corrected + pivotUpOffset;
+        return pivotEncoder.getAbsolutePosition().getValueAsDouble();
     }
 
     private boolean isIntakeUp() {
-        double pos = getPivotPosition();
-        return Math.abs(pos - pivotUpPosition) < (hysteresis / 360.0);
+        return Math.abs(getPivotPosition() - pivotUpPosition) < (hysteresis / 360.0);
     }
 
     private boolean isIntakeDown() {
-        double pos = getPivotPosition();
-        return Math.abs(pos - pivotDownPosition) < (hysteresis / 360.0);
+        return Math.abs(getPivotPosition() - pivotDownPosition) < (hysteresis / 360.0);
     }
 }

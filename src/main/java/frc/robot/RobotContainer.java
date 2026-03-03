@@ -126,7 +126,7 @@ public class RobotContainer {
         driverController.b().whileTrue(new FeedFromNeutral(shooter));
         driverController.x().whileTrue(new FeedFromOpposite(shooter));
         
-        driverController.a().whileTrue(new AutoFaceHubCommand(drivetrain));
+        driverController.a().whileTrue(new AutoFaceHubCommand(drivetrain, vision));
 
         driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));

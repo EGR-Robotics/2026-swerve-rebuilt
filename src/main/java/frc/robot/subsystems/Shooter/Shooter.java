@@ -107,6 +107,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setHoodAngle(double deg) {
+        System.out.println(getHoodAngle());
+        
         goalAngle = Math.max(min_angle, Math.min(max_angle, deg));
 
         double motorRot = angleToMotorRot(goalAngle);
