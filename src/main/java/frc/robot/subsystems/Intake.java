@@ -10,7 +10,7 @@ public class Intake extends SubsystemBase {
     private final TalonFX intakeRoller = new TalonFX(27, "5980");
     private final TalonFX intakePivot = new TalonFX(26, "5980");
 
-    private static final double intakeSpeed = 1.5;
+    private static final double intakeSpeed = 3;
     private static final double voltageNumber = 12;
 
     public Intake() {

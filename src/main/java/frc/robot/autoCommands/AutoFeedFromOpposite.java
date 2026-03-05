@@ -1,30 +1,28 @@
-package frc.robot.commands;
+package frc.robot.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.ShooterPresets;
 
-public class ByOutpostShot extends Command {
+public class AutoFeedFromOpposite extends Command {
 
     private final Shooter shooter;
 
-    public ByOutpostShot(Shooter shooter) {
+    public AutoFeedFromOpposite(Shooter shooter) {
         this.shooter = shooter;
         addRequirements(shooter);
     }
 
     @Override
     public void initialize() {
-        shooter.setHoodAngle(ShooterPresets.OUTPOST_ANGLE);
-        shooter.setFlywheelRPM(ShooterPresets.OUTPOST_RPM);
-        // shooter.setHoodAngle(ShooterPresets.TESTING_ANGLE);
-        // shooter.setFlywheelRPM(ShooterPresets.TESTING_RPM);
+        shooter.setHoodAngle(ShooterPresets.OPPOSITE_ANGLE);
+        shooter.setFlywheelRPM(ShooterPresets.OPPOSITE_RPM);
     }
 
     @Override
     public void execute() {
         // if (shooter.readyToShoot()) {
-        //     shooter.setFeederSpeed(ShooterPresets.HUB_RPM);
+        //     shooter.setFeederSpeed(ShooterPresets.OPPOSITE_RPM);
         // }
     }
 
@@ -36,6 +34,6 @@ public class ByOutpostShot extends Command {
 
     @Override
     public boolean isFinished() {
-        return true; // run while button held
+        return false;
     }
 }

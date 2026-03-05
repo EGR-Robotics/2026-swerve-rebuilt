@@ -29,6 +29,7 @@ public class FeedFromOpposite extends Command {
     @Override
     public void end(boolean interrupted) {
         shooter.setFlywheelRPM(0);
+        shooter.setHoodAngle(5);
     }
 
     @Override

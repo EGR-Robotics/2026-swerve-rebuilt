@@ -6,6 +6,8 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,7 +21,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.ByOutpostShot;
-import frc.robot.commands.AutoFaceHubCommand;
+import frc.robot.autoCommands.AutoFeed;
+import frc.robot.autoCommands.AutoHubShot;
+import frc.robot.autoCommands.AutoIntake;
+import frc.robot.autoCommands.AutoIntakeLower;
+import frc.robot.autoCommands.Auto_ByOutpostShot;
+import frc.robot.commands.AutoShooterAlignCommand;
 import frc.robot.commands.FeedFromNeutral;
 import frc.robot.commands.FeedFromOpposite;
 import frc.robot.generated.TunerConstants;
@@ -29,6 +36,7 @@ import frc.robot.subsystems.Feed;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Shooter.ShooterTable;
 
 import java.util.List;
 
@@ -36,11 +44,11 @@ public class RobotContainer {
 
     private double MaxSpeed = 0.6 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
-    private double MAX_RPM = 5000;
+    private double MAX_RPM = 3500;
 
-    private final SlewRateLimiter xLimiter = new SlewRateLimiter(1.5);
-    private final SlewRateLimiter yLimiter = new SlewRateLimiter(1.5);
-    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(1.5);
+    private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+    private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
+    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(2);
 
     private double shape(double input) {
         return Math.copySign(input * input * input, input);
@@ -64,37 +72,41 @@ public class RobotContainer {
     public Feed feed = new Feed();
     public Intake intake = new Intake();
     public Vision vision = new Vision();
+    public ShooterTable table = new ShooterTable();
 
-    // ---------------- AUTO SELECTORS ----------------
     private SendableChooser<String> allianceChooser = new SendableChooser<>();
     private SendableChooser<String> autoChooser = new SendableChooser<>();
 
-    // Add new autos here to make them appear in the dropdown
     private final List<String> redAutos = List.of("Red 1", "Red 2", "Red 3");
-    private final List<String> blueAutos = List.of("Blue 1", "Blue 2", "Blue 3");
+    private final List<String> blueAutos = List.of("BlueCenterToShootCenter", "BlueCenterToCenterToOutpost", "Blue 3");
 
     public RobotContainer() {
         configureBindings();
-        configureAutoSelectors(); // sets up SmartDashboard auto UI
+        configureAutoSelectors();
+
+        // ---------------- REGISTER NAMED COMMANDS FIRST ----------------
+        NamedCommands.registerCommand("AutoIntakeLower", new AutoIntakeLower(intake));
+        NamedCommands.registerCommand("AutoIntake", new AutoIntake(intake));
+        NamedCommands.registerCommand("AutoHubShot", new AutoHubShot(shooter));
+        NamedCommands.registerCommand("Auto_ByOutpostShot", new Auto_ByOutpostShot(shooter));
+        NamedCommands.registerCommand("AutoFeed", new AutoFeed(feed));
+
+        // ---------------- NOW configure AutoBuilder ----------------
+        drivetrain.configureAutoBuilder();
     }
 
     private void configureAutoSelectors() {
-
-        // Alliance selector (multiple choice)
         allianceChooser.setDefaultOption("Red Alliance", "RED");
         allianceChooser.addOption("Blue Alliance", "BLUE");
         SmartDashboard.putData("Alliance Selector", allianceChooser);
 
-        // Build the initial auto list (default = red)
         populateAutoChooser("RED");
         SmartDashboard.putData("Auto Selector", autoChooser);
 
-        // When alliance changes, rebuild the auto dropdown
         allianceChooser.onChange(alliance -> populateAutoChooser(alliance));
     }
 
     private void populateAutoChooser(String alliance) {
-        // WPILib requires creating a new chooser to update options
         SendableChooser<String> newChooser = new SendableChooser<>();
 
         if (alliance.equals("RED")) {
@@ -139,8 +151,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // ---------------- DRIVER CONTROLS ----------------
-
+        // DRIVER CONTROLS
         driverController.leftTrigger().whileTrue(
             new RunCommand(() -> intake.intake(driverController.getLeftTriggerAxis()), intake)
                 .finallyDo(() -> intake.stopRoller())
@@ -169,15 +180,14 @@ public class RobotContainer {
         driverController.b().whileTrue(new FeedFromNeutral(shooter));
         driverController.x().whileTrue(new FeedFromOpposite(shooter));
         
-        driverController.a().whileTrue(new AutoFaceHubCommand(drivetrain, vision));
+        driverController.a().whileTrue(new AutoShooterAlignCommand(drivetrain, vision, shooter, table));
 
         driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // ---------------- OPERATOR CONTROLS ----------------
-        
+        // OPERATOR CONTROLS
         operatorController.leftTrigger().whileTrue(
             new RunCommand(() -> {
                 double trigger = operatorController.getLeftTriggerAxis();
@@ -185,7 +195,7 @@ public class RobotContainer {
                 shooter.setHoodAngle(angle);
             }, shooter)
         ).onFalse(
-            new InstantCommand(() -> shooter.setHoodAngle(Shooter.min_angle), shooter)
+            new InstantCommand(() -> shooter.setHoodAngle(5), shooter)
         );
 
         operatorController.rightTrigger().whileTrue(
@@ -227,33 +237,28 @@ public class RobotContainer {
             new InstantCommand(() -> intake.stopPivot(), intake)
         );
 
-
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
-    // ---------------- AUTO COMMAND SELECTION ----------------
     public Command getAutonomousCommand() {
-        // Whatever is selected on SmartDashboard WILL run in auto
         String alliance = allianceChooser.getSelected();
         String autoName = autoChooser.getSelected();
         return buildAutoCommand(alliance, autoName);
     }
 
-    // This is where autos actually run.
-    // When you add a new PathPlanner auto, add a case here.
     private Command buildAutoCommand(String alliance, String autoName) {
 
         if (alliance.equals("RED")) {
             switch (autoName) {
-                case "auto 1": return Commands.print("Running auto 1");
-                case "auto 2": return Commands.print("Running auto 2");
-                case "auto 3": return Commands.print("Running auto 3");
+                case "Red 1": return Commands.print("Running Red 1");
+                case "Red 2": return Commands.print("Running Red 2");
+                case "Red 3": return Commands.print("Running Red 3");
             }
         } else {
             switch (autoName) {
-                case "auto 1": return Commands.print("Running auto 1");
-                case "auto 2": return Commands.print("Running auto 2");
-                case "auto blue 3": return Commands.print("Running auto blue 3");
+                case "BlueCenterToShootCenter": return new PathPlannerAuto("BlueCenterToShootCenter");
+                case "BlueCenterToCenterToOutpost": return new PathPlannerAuto("BlueCenterToCenterToOutpost");
+                case "Blue 3": return Commands.print("Running Blue 3");
             }
         }
 

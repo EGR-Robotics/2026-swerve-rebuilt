@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.autoCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -10,7 +10,7 @@ import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.ShooterTable;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-public class AutoShooterAlignCommand extends Command {
+public class Auto_AutoShooterAlignCommand extends Command {
 
     private final CommandSwerveDrivetrain drivetrain;
     private final Vision vision;
@@ -31,7 +31,7 @@ public class AutoShooterAlignCommand extends Command {
     // How close to center we consider "aligned"
     private static final double YAW_TOLERANCE_DEG = 1.0;
 
-    public AutoShooterAlignCommand(
+    public Auto_AutoShooterAlignCommand(
         CommandSwerveDrivetrain drivetrain,
         Vision vision,
         Shooter shooter,

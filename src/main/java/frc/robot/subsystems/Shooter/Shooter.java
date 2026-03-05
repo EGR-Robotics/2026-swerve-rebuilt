@@ -126,6 +126,10 @@ public class Shooter extends SubsystemBase {
         return encoderToAngle(abs);
     }
 
+    // public void stopFlywheelandHood() {
+    //     setHoodAngle(10);
+    // }
+
     public boolean readyToShoot() {
         return Math.abs(goalRPM - getFlywheelRPM()) < RPM_TOL &&
                Math.abs(goalAngle - getHoodAngle()) < ANGLE_TOL;

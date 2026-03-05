@@ -11,9 +11,14 @@ public class ShooterTable {
     // Distances measured in feet on field, converted to meters for code
     // Format: addPoint(feet * 0.3048, angle, rpm) 
     // Use as many points as possible for more accuracy.
-    addPoint(6  * 0.3048, 28.0, 3600);  // 6 feet
-    addPoint(10 * 0.3048, 24.0, 3900);  // 10 feet
-    addPoint(13 * 0.3048, 18.0, 4300);  // 13 feet
+    addPoint(3  * 0.3048, 0.0, 2150);  // 3 feet
+    addPoint(3.5  * 0.3048, 0.0, 2150);  // 3.5 feet
+    addPoint(4  * 0.3048, 0.0, 2175);  // 4 feet
+    addPoint(4.5  * 0.3048, 0.0, 2200);  // 4.5 feet
+    addPoint(5  * 0.3048, 0.0, 2215);  // 5 feet
+    addPoint(5.5  * 0.3048, 0.0, 2225);  // 5.5 feet
+    addPoint(6  * 0.3048, 0.0, 2225);  // 6 feet
+    addPoint(6.5  * 0.3048, 0.0, 2235);  // 6.5 feet
 }
 
     private void addPoint(double distance, double angle, double rpm) {

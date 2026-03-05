@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.autoCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -7,7 +7,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-public class AutoFaceHubCommand extends Command {
+public class Auto_AutoFaceHubCommand extends Command {
 
     private final CommandSwerveDrivetrain drivetrain;
     private final Vision vision;
@@ -22,7 +22,7 @@ public class AutoFaceHubCommand extends Command {
     // How close to center (in degrees of tx) we consider "good enough"
     private static final double YAW_TOLERANCE_DEG = 1.5;
 
-    public AutoFaceHubCommand(CommandSwerveDrivetrain drivetrain, Vision vision) {
+    public Auto_AutoFaceHubCommand(CommandSwerveDrivetrain drivetrain, Vision vision) {
         this.drivetrain = drivetrain;
         this.vision = vision;
         addRequirements(drivetrain);

@@ -18,6 +18,11 @@ public class ShooterPresets {
     public static final double CLIMB_RIGHT_ANGLE = 0;
 
     //outpost
-    public static final double OUTPOST_RPM = 2750;
+    public static final double OUTPOST_RPM = 2600;
     public static final double OUTPOST_ANGLE = 0;
+    
+    //testing
+    
+    public static final double TESTING_RPM = 2225;
+    public static final double TESTING_ANGLE = 0;
 }

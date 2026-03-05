@@ -3,53 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.806144578313253,
-        "y": 4.078710843373494
+        "x": 3.65,
+        "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.124634009765455,
-        "y": 4.002105019535214
+        "x": 3.4360517536211708,
+        "y": 4.870670390585049
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "BlueBumpLeftStart"
     },
     {
       "anchor": {
-        "x": 1.8007951807228912,
-        "y": 4.078710843373494
+        "x": 2.0,
+        "y": 4.0
       },
       "prevControl": {
-        "x": 2.335688607800977,
-        "y": 4.028328081810778
+        "x": 1.7013617160483676,
+        "y": 3.818456783297681
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "BlueCenter"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.65,
-        "y": 4.03
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.25,
-      "maxWaypointRelativePos": 0.75,
-      "name": "Point Towards Zone"
-    }
-  ],
-  "eventMarkers": [
-    {
-      "name": "shooting",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.0,
-      "command": null
-    }
-  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

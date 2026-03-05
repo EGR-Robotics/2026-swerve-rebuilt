@@ -9,8 +9,10 @@ public class Vision {
     private static final String FRONT_LL = "limelight-front";
     private static final String BACK_LL  = "limelight-back";
 
-    private static final int[] BLUE_HUB_TAGS = {26, 25, 27, 24, 18, 21};
-    private static final int[] RED_HUB_TAGS  = {10, 9, 11, 8, 2, 5};
+    // private static final int[] BLUE_HUB_TAGS = {26, 25, 27, 24, 18, 21};
+    private static final int[] BLUE_HUB_TAGS = {26};
+    //private static final int[] RED_HUB_TAGS  = {10, 9, 11, 8, 2, 5};
+    private static final int[] RED_HUB_TAGS  = {10};
 
     private static final int[] BLUE_CLIMB_TAGS = {31, 32};
     private static final int[] RED_CLIMB_TAGS  = {15, 16};
@@ -28,24 +30,26 @@ public class Vision {
         int[] climbTags = getClimbTagList();
 
         // 1. Try front LL for hub tags
-        double yaw = getYawFromCamera(FRONT_LL, hubTags);
+        double yaw = getYawFromCamera(FRONT_LL, hubTags) * 1.1;
         if (!Double.isNaN(yaw)) {
             return yaw;
         }
 
         // 2. Try back LL for climb tag fallback
-        yaw = getYawFromCamera(BACK_LL, climbTags);
+        yaw = getYawFromCamera(BACK_LL, climbTags) * 1.1;
         if (!Double.isNaN(yaw)) {
             return convertClimbYawToHubYaw(yaw);
         }
 
-        return Double.NaN;
+        return Double.NaN ;
     }
 
     /** Returns distance to hub from front camera only — no fallback to avoid inaccuracy */
     public double getDistanceToHub() {
         int[] hubTags = getHubTagList();
-        return getDistanceFromCamera(FRONT_LL, hubTags);
+        double distance = getDistanceFromCamera(FRONT_LL, hubTags);
+
+        return distance;
     }
 
     private int[] getHubTagList() {
