@@ -77,8 +77,8 @@ public class RobotContainer {
     private SendableChooser<String> allianceChooser = new SendableChooser<>();
     private SendableChooser<String> autoChooser = new SendableChooser<>();
 
-    private final List<String> redAutos = List.of("Red 1", "Red 2", "Red 3");
-    private final List<String> blueAutos = List.of("BlueCenterToShootCenter", "BlueCenterToCenterToOutpost", "Blue 3");
+    private final List<String> redAutos = List.of("RedCenterToCenter", "RedCenterToCenterToOutpost", "RedLeftToCenter", "RedLeftToCenterToOutpost", "RedRightToCenter", "RedRightToCenterToOutpost ");
+    private final List<String> blueAutos = List.of("BlueCenterToShootCenter", "BlueCenterToCenterToOutpost", "BlueLeftToCenter", "BlueLeftToCenterToOutpost","BlueRightToCenter", "BlueRightToCenterToOutpost");
 
     public RobotContainer() {
         configureBindings();
@@ -250,15 +250,21 @@ public class RobotContainer {
 
         if (alliance.equals("RED")) {
             switch (autoName) {
-                case "Red 1": return Commands.print("Running Red 1");
-                case "Red 2": return Commands.print("Running Red 2");
-                case "Red 3": return Commands.print("Running Red 3");
+                case "RedCenterToCenter": return new PathPlannerAuto("RedCenterToCenter");
+                case "RedCenterToCenterToOutpost": return new PathPlannerAuto("RedCenterToCenterToOutpost");
+                case "RedLeftToCenter": return new PathPlannerAuto("RedLeftToCenter");
+                case "RedLeftToCenterToOutpost": return new PathPlannerAuto("RedLeftToCenterToOutpost");
+                case "RedRightToCenter": return new PathPlannerAuto("RedRightToCenter");
+                case "RedRightToCenterToOutpost": return new PathPlannerAuto("RedRightToCenterToOutpost");
             }
         } else {
             switch (autoName) {
-                case "BlueCenterToShootCenter": return new PathPlannerAuto("BlueCenterToShootCenter");
+                case "BlueCenterToCenter": return new PathPlannerAuto("BlueCenterToCenter");
                 case "BlueCenterToCenterToOutpost": return new PathPlannerAuto("BlueCenterToCenterToOutpost");
-                case "Blue 3": return Commands.print("Running Blue 3");
+                case "BlueLeftToCenter": return new PathPlannerAuto("BlueLeftToCenter");
+                case "BlueLeftToCenterToOutpost": return new PathPlannerAuto("BlueLeftToCenterToOutpost");
+                case "BlueRightToCenter": return new PathPlannerAuto("BlueRightToCenter");
+                case "BlueRightToCenterToOutpost": return new PathPlannerAuto("BlueRightToCenterToOutpost");
             }
         }
 

@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4360517536211708,
-        "y": 4.870670390585049
+        "x": 3.0434026789115913,
+        "y": 4.5094457086084345
       },
       "isLocked": false,
       "linkedName": "BlueBumpLeftStart"
     },
     {
       "anchor": {
-        "x": 2.0,
+        "x": 2.4,
         "y": 4.0
       },
       "prevControl": {
-        "x": 1.7013617160483676,
-        "y": 3.818456783297681
+        "x": 2.2039377536961533,
+        "y": 3.8448884415193705
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 1.1846918316079673
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Blue",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

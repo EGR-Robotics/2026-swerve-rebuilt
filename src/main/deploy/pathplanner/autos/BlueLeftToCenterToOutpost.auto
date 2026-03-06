@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "AutoIntakeLower"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "BlueLeftToCenter"
@@ -51,7 +57,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueOutpostToOutpostShoot"
           }
         },
         {
@@ -79,6 +91,12 @@
                       "data": {
                         "name": "AutoFeed"
                       }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoFeed"
+                      }
                     }
                   ]
                 }
@@ -90,6 +108,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Blue Outpost",
   "choreoAuto": false
 }

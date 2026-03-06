@@ -1,5 +1,6 @@
 package frc.robot.autoCommands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.ShooterPresets;
@@ -7,18 +8,23 @@ import frc.robot.subsystems.Shooter.ShooterPresets;
 public class AutoHubShot extends Command {
 
     private final Shooter shooter;
+    private Timer timer;
 
     public AutoHubShot(Shooter shooter) {
         this.shooter = shooter;
+        this.timer = new Timer();
+
         addRequirements(shooter);
     }
 
     @Override
     public void initialize() {
+        timer.reset();
+        timer.start();
+
         shooter.setHoodAngle(ShooterPresets.HUB_ANGLE);
         shooter.setFlywheelRPM(ShooterPresets.HUB_RPM);
 
-        withTimeout(4);
     }
 
     @Override
@@ -30,12 +36,14 @@ public class AutoHubShot extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        timer.stop();
+
         shooter.setFlywheelRPM(0);
         shooter.setHoodAngle(5);
     }
 
     @Override
     public boolean isFinished() {
-        return false; // run while button held
+        return timer.get() >= 5;
     }
 }

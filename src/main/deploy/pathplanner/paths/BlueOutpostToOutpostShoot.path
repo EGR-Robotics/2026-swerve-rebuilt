@@ -3,34 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.665,
-        "y": 3.1098858773181166
+        "x": 0.67,
+        "y": 0.669265060240964
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.029660689187791,
-        "y": 2.911414280434334
+        "x": 0.9133729462288138,
+        "y": 0.7459794295112396
       },
       "isLocked": false,
-      "linkedName": "BlueBumpRightStart"
+      "linkedName": "BlueOutpostIntake"
     },
     {
       "anchor": {
-        "x": 2.4,
-        "y": 4.0
+        "x": 1.1779156626506024,
+        "y": 1.128228915662652
       },
       "prevControl": {
-        "x": 2.1786324556021945,
-        "y": 4.120330468932918
+        "x": 0.7994518852808967,
+        "y": 0.8017326145563064
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BlueCenter"
+      "linkedName": "BlueOutpostShoot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "pointTowardsZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 4.625,
+        "y": 4.035
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 1.0,
+      "name": "Point Towards Zone"
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
@@ -42,13 +53,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.1846918316079673
+    "rotation": 36.52885536698513
   },
   "reversed": false,
   "folder": "Blue",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -0.2971043646709377
   },
   "useDefaultConstraints": true
 }

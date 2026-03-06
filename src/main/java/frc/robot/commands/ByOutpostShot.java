@@ -17,14 +17,12 @@ public class ByOutpostShot extends Command {
     public void initialize() {
         shooter.setHoodAngle(ShooterPresets.OUTPOST_ANGLE);
         shooter.setFlywheelRPM(ShooterPresets.OUTPOST_RPM);
-        // shooter.setHoodAngle(ShooterPresets.TESTING_ANGLE);
-        // shooter.setFlywheelRPM(ShooterPresets.TESTING_RPM);
     }
 
     @Override
     public void execute() {
         // if (shooter.readyToShoot()) {
-        //     shooter.setFeederSpeed(ShooterPresets.HUB_RPM);
+        //     shooter.setFeederSpeed(ShooterPresets.NEUTRAL_RPM);
         // }
     }
 
@@ -32,10 +30,12 @@ public class ByOutpostShot extends Command {
     public void end(boolean interrupted) {
         shooter.setFlywheelRPM(0);
         shooter.setHoodAngle(5);
+        
+
     }
 
     @Override
     public boolean isFinished() {
-        return true; // run while button held
+        return false; // run while button held
     }
 }

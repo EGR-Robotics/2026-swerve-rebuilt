@@ -5,9 +5,15 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "AutoIntakeLower"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "BlueCenterToCenter"
+            "pathName": "RedRightToCenter"
           }
         },
         {
@@ -46,6 +52,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Red Center",
   "choreoAuto": false
 }
