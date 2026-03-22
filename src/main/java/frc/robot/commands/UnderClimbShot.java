@@ -1,49 +1,41 @@
-package frc.robot.autoCommands;
+package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.ShooterPresets;
 
-public class AutoHubShot extends Command {
+public class UnderClimbShot extends Command {
 
     private final Shooter shooter;
-    private Timer timer;
 
-    public AutoHubShot(Shooter shooter) {
+    public UnderClimbShot(Shooter shooter) {
         this.shooter = shooter;
-        this.timer = new Timer();
-
         addRequirements(shooter);
     }
 
     @Override
     public void initialize() {
-        timer.reset();
-        timer.start();
-
-        shooter.setHoodAngle(ShooterPresets.HUB_ANGLE);
-        shooter.setFlywheelRPM(ShooterPresets.HUB_RPM);
-
+        shooter.setHoodAngle(ShooterPresets.UNDER_CLIMB_ANGLE);
+        shooter.setFlywheelRPM(ShooterPresets.UNDER_CLIMB_RPM);
     }
 
     @Override
     public void execute() {
         // if (shooter.readyToShoot()) {
-        //     shooter.setFeederSpeed(ShooterPresets.HUB_RPM);
+        //     shooter.setFeederSpeed(ShooterPresets.NEUTRAL_RPM);
         // }
     }
 
     @Override
     public void end(boolean interrupted) {
-        timer.stop();
-
         shooter.setFlywheelRPM(0);
         shooter.setHoodAngle(5);
+        
+
     }
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 8;
+        return false; // run while button held
     }
 }

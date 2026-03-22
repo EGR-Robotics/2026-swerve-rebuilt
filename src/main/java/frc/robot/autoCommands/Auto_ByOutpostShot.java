@@ -19,8 +19,8 @@ public class Auto_ByOutpostShot extends Command {
 
     @Override
     public void initialize() {
-        shooter.setHoodAngle(ShooterPresets.OUTPOST_ANGLE);
-        shooter.setFlywheelRPM(ShooterPresets.OUTPOST_RPM);
+        shooter.setHoodAngle(ShooterPresets.OUTPOST_AUTO_ANGLE);
+        shooter.setFlywheelRPM(ShooterPresets.OUTPOST_AUTO_RPM);
     }
 
     @Override

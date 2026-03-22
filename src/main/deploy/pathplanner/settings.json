@@ -8,9 +8,12 @@
   ],
   "autoFolders": [
     "Blue Center",
-    "Blue Outpost",
-    "Red Outpost",
-    "Red Center"
+    "Blue Left Trench",
+    "Blue Right Trench",
+    "Unused",
+    "Red Center",
+    "Red Left Trench",
+    "Red Right Trench"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

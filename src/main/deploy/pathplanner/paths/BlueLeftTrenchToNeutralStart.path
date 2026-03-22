@@ -3,50 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.93,
-        "y": 5.0
+        "x": 4.0409759036144575,
+        "y": 7.291457831325301
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.14201368367229,
-        "y": 4.86752283994701
+        "x": 5.811265060240963,
+        "y": 7.641144578313253
       },
       "isLocked": false,
-      "linkedName": "RedBumpRightStart"
+      "linkedName": "BlueLeftTrenchShootStart"
     },
     {
       "anchor": {
-        "x": 14.433228915662651,
-        "y": 4.0
+        "x": 7.712686746987952,
+        "y": 6.821566265060242
       },
       "prevControl": {
-        "x": 14.221235205559255,
-        "y": 4.1325091199751816
+        "x": 7.811036144578313,
+        "y": 7.291457831325302
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RedCenter"
+      "linkedName": "BlueLeftTrenchNeutralZoneStart"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.28,
+      "rotationDegrees": -70.66118963850343
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "AutoIntakeLower",
+      "name": "AutoFeed",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "AutoHubShot",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "AutoFeed",
-      "waypointRelativePos": 1.0,
+      "name": "AutoIntakeLower",
+      "waypointRelativePos": 0.5,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -61,13 +60,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.5679038158354
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Red",
+  "folder": "Blue",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.02834039496216
+    "rotation": -82.87498365109818
   },
   "useDefaultConstraints": true
 }

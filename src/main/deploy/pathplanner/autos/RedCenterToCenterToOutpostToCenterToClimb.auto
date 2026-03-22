@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueCenterToCenter"
+            "pathName": "RedCenterToCenter"
           }
         },
         {
@@ -33,7 +33,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 0.2
                       }
                     },
                     {
@@ -51,7 +51,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueCenterToOutpost"
+            "pathName": "RedCenterToOutpost"
           }
         },
         {
@@ -63,7 +63,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueOutpostToOutpostShoot"
+            "pathName": "RedOutpostToCenter"
           }
         },
         {
@@ -73,7 +73,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Auto_ByOutpostShot"
+                  "name": "AutoHubShot"
                 }
               },
               {
@@ -83,13 +83,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.1
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "AutoFeed"
+                        "waitTime": 0.2
                       }
                     },
                     {
@@ -108,6 +102,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Blue Center",
+  "folder": "Red Center",
   "choreoAuto": false
 }

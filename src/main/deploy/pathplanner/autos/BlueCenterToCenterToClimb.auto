@@ -7,13 +7,19 @@
         {
           "type": "named",
           "data": {
+            "name": "AutoIntakeRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AutoIntakeLower"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueLeftToCenter"
+            "pathName": "BlueCenterToCenter"
           }
         },
         {
@@ -46,6 +52,30 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueCenterToPreClimb"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoClimbUp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BluePreClimbToPostClimb"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoClimbDown"
           }
         }
       ]

@@ -1,22 +1,22 @@
-package frc.robot.autoCommands;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.ShooterPresets;
 
-public class Auto_FeedFromNeutral extends Command {
+public class Hub2Preset extends Command {
 
     private final Shooter shooter;
 
-    public Auto_FeedFromNeutral(Shooter shooter) {
+    public Hub2Preset(Shooter shooter) {
         this.shooter = shooter;
         addRequirements(shooter);
     }
 
     @Override
     public void initialize() {
-        shooter.setHoodAngle(ShooterPresets.NEUTRAL_ANGLE);
-        shooter.setFlywheelRPM(ShooterPresets.NEUTRAL_RPM);
+        shooter.setHoodAngle(ShooterPresets.HUB2_ANGLE);
+        shooter.setFlywheelRPM(ShooterPresets.HUB2_RPM);
     }
 
     @Override

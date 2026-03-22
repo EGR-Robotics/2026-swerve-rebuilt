@@ -33,7 +33,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 0.2
                       }
                     },
                     {
@@ -63,7 +63,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueOutpostToOutpostShoot"
+            "pathName": "BlueOutpostToCenter"
           }
         },
         {
@@ -73,7 +73,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Auto_ByOutpostShot"
+                  "name": "AutoHubShot"
                 }
               },
               {
@@ -83,13 +83,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.1
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "AutoFeed"
+                        "waitTime": 0.2
                       }
                     },
                     {
@@ -102,6 +96,30 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueCenterToPreClimb"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoClimbUp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BluePreClimbToPostClimb"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoClimbDown"
           }
         }
       ]

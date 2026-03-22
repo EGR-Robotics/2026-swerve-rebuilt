@@ -21,6 +21,12 @@ public class Climber extends SubsystemBase {
     }
 
     /** Run only the left climber */
+    public void climbLeftJoystick(double axis) {
+        leftClimber.setControl(new VoltageOut(climbSpeed * voltageNumber * axis));
+        rightClimber.setControl(new VoltageOut(0));
+        setBrakeMode(false);
+    }
+
     public void climbLeft() {
         leftClimber.setControl(new VoltageOut(climbSpeed * voltageNumber * direction));
         rightClimber.setControl(new VoltageOut(0));

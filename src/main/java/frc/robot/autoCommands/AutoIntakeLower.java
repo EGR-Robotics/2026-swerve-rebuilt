@@ -34,12 +34,12 @@ public class AutoIntakeLower extends Command {
     @Override
     public void end(boolean interrupted) {
         timer.stop();
-        
+
         intake.stopPivot();
     }
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 0.1;
+        return timer.get() >= 0.52;
     }
 }

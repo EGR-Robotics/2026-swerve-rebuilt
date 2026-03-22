@@ -7,13 +7,19 @@
         {
           "type": "named",
           "data": {
+            "name": "AutoIntakeRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AutoIntakeLower"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueCenterToCenter"
+            "pathName": "RedLeftToCenter"
           }
         },
         {
@@ -51,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueCenterToOutpost"
+            "pathName": "RedCenterToOutpost"
           }
         },
         {
@@ -63,7 +69,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueOutpostToOutpostShoot"
+            "pathName": "RedOutpostToOutpostShoot"
           }
         },
         {
@@ -103,11 +109,17 @@
               }
             ]
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RedOutpostToNeutral"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Blue Center",
+  "folder": "Unused",
   "choreoAuto": false
 }

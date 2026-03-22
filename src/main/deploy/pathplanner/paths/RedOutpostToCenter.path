@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.93,
-        "y": 5.0
+        "x": 16.05,
+        "y": 7.62
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.14201368367229,
-        "y": 4.86752283994701
+        "x": 14.149108433734941,
+        "y": 5.8471445783132525
       },
       "isLocked": false,
-      "linkedName": "RedBumpRightStart"
+      "linkedName": "RedOutpostIntake"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 14.221235205559255,
-        "y": 4.1325091199751816
+        "x": 14.271692812033208,
+        "y": 3.7286895327104075
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,7 +67,7 @@
   "folder": "Red",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.02834039496216
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

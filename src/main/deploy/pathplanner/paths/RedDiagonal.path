@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.93,
+        "x": 12.94,
         "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.14201368367229,
-        "y": 4.86752283994701
+        "x": 13.38039256503076,
+        "y": 4.958584772991179
       },
       "isLocked": false,
       "linkedName": "RedBumpRightStart"
@@ -20,8 +20,8 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 14.221235205559255,
-        "y": 4.1325091199751816
+        "x": 14.184151058545845,
+        "y": 4.021452764253134
       },
       "nextControl": null,
       "isLocked": false,

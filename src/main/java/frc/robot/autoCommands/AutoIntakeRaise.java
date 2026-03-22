@@ -2,18 +2,18 @@ package frc.robot.autoCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Feed;
+import frc.robot.subsystems.Intake;
 
-public class AutoFeed extends Command {
+public class AutoIntakeRaise extends Command {
 
-    private final Feed feed;
+    private final Intake intake;
     private Timer timer;
 
-    public AutoFeed(Feed feed) {
-        this.feed = feed;
+    public AutoIntakeRaise(Intake intake) {
+        this.intake = intake;
         this.timer = new Timer();
 
-        addRequirements(feed);
+        addRequirements(intake);
     }
 
     @Override
@@ -21,8 +21,7 @@ public class AutoFeed extends Command {
         timer.reset();
         timer.start();
 
-        feed.setRollerRPM(12000);
-        feed.setFeederSpeed(12000);
+        intake.raiseIntake();
     }
 
     @Override
@@ -35,13 +34,12 @@ public class AutoFeed extends Command {
     @Override
     public void end(boolean interrupted) {
         timer.stop();
-        
-        feed.stopFeed(0);
-        feed.stopRoller();
+
+        intake.stopPivot();
     }
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 6;
+        return timer.get() >= 0.05;
     }
 }

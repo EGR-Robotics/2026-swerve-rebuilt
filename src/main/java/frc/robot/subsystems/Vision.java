@@ -9,18 +9,24 @@ public class Vision {
     private static final String FRONT_LL = "limelight-front";
     private static final String BACK_LL  = "limelight-back";
 
-    // private static final int[] BLUE_HUB_TAGS = {26, 25, 27, 24, 18, 21};
     private static final int[] BLUE_HUB_TAGS = {26};
-    //private static final int[] RED_HUB_TAGS  = {10, 9, 11, 8, 2, 5};
     private static final int[] RED_HUB_TAGS  = {10};
 
     private static final int[] BLUE_CLIMB_TAGS = {31, 32};
     private static final int[] RED_CLIMB_TAGS  = {15, 16};
 
-    private static final double HUB_TO_CLIMB_DISTANCE = 3.00; //Todo: <-- UPDATE THIS
+    private static final double HUB_TO_CLIMB_DISTANCE = 3.00;
 
     public Vision() {
-        LimelightHelpers.setPipelineIndex("limelight-front", 0);
+        // Constructor MUST stay empty to avoid delaying auto
+    }
+
+    /** Call this ONCE in robotInit() */
+    public void initialize() {
+        System.out.println("[Vision] Initializing Limelights...");
+        LimelightHelpers.setPipelineIndex(FRONT_LL, 0);
+        LimelightHelpers.setPipelineIndex(BACK_LL, 0);
+        System.out.println("[Vision] Initialization complete.");
     }
 
     /** Returns yaw error to hub or fallback climb tag direction */
@@ -29,27 +35,22 @@ public class Vision {
         int[] hubTags = getHubTagList();
         int[] climbTags = getClimbTagList();
 
-        // 1. Try front LL for hub tags
         double yaw = getYawFromCamera(FRONT_LL, hubTags) * 1.1;
         if (!Double.isNaN(yaw)) {
             return yaw;
         }
 
-        // 2. Try back LL for climb tag fallback
         yaw = getYawFromCamera(BACK_LL, climbTags) * 1.1;
         if (!Double.isNaN(yaw)) {
             return convertClimbYawToHubYaw(yaw);
         }
 
-        return Double.NaN ;
+        return Double.NaN;
     }
 
-    /** Returns distance to hub from front camera only — no fallback to avoid inaccuracy */
     public double getDistanceToHub() {
         int[] hubTags = getHubTagList();
-        double distance = getDistanceFromCamera(FRONT_LL, hubTags);
-
-        return distance;
+        return getDistanceFromCamera(FRONT_LL, hubTags);
     }
 
     private int[] getHubTagList() {
@@ -93,8 +94,7 @@ public class Vision {
         return Double.NaN;
     }
 
-    /** Negated: back camera faces away from hub, so yaw direction is inverted */
     private double convertClimbYawToHubYaw(double climbYaw) {
-        return -climbYaw * 0.5; // tunable
+        return -climbYaw * 0.5;
     }
 }

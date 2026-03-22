@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "AutoIntakeRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AutoIntakeLower"
           }
         },
@@ -52,6 +58,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Red Center",
+  "folder": "Unused",
   "choreoAuto": false
 }

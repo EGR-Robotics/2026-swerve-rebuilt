@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.613586696327024,
-        "y": 3.999104198365842
+        "x": 14.060946070666441,
+        "y": 3.9498951620006797
       },
       "isLocked": false,
       "linkedName": "RedStartCenter"
     },
     {
       "anchor": {
-        "x": 14.5,
+        "x": 14.433228915662651,
         "y": 4.0
       },
       "prevControl": {
-        "x": 14.076554761046472,
-        "y": 3.983658313386956
+        "x": 14.016478519271296,
+        "y": 4.017049876280508
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -179.02834039496216
+    "rotation": -178.5679038158354
   },
   "reversed": false,
   "folder": "Red",
