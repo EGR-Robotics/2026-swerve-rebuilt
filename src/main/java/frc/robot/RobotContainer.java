@@ -82,7 +82,7 @@ public class RobotContainer {
     private SendableChooser<String> autoChooser = new SendableChooser<>();
 
     private final List<String> redAutos = List.of("RedCenterToCenter", "RedCenterToCenterToOutpost", "RedLeftToCenter", "RedLeftToCenterToOutpost", "RedRightToCenter", "RedRightToCenterToOutpost", "RedCenterToCenterToOutpostToNeutral", "RedCenterToCenterToOutpostToCenter", "RedDiagonal", "RedCenterToCenterToOutpostToCenterToClimb", "RedLeftToCenterToOutpostToNeutral", "RedRightToCenterToOutpostToNeutral");
-    private final List<String> blueAutos = List.of("BlueCenterToCenter", "BlueCenterToCenterToOutpost", "BlueLeftToCenter", "BlueLeftToCenterToOutpost","BlueRightToCenter", "BlueRightToCenterToOutpost", "BlueDiagonal", "BlueCenterToCenterToClimb", "BlueCenterToCenterToOutpostToCenter", "BlueCenterToCenterToOutpostToCenterToClimb", "BlueLeftTrenchChaosToLeftTrench", "BlueLeftTrenchToNeutralStartToNeutralMidToLeftTrench", "BlueRightTrenchToNeutralStartToNeutralMidToRightTrench", "BlueRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
+    private final List<String> blueAutos = List.of("ChocolateChip", "WhiteChocolateChip", "M&MCookie", "OatmealRaisin", "DoubleChocolate", "Oreo", "FortuneCookie", "ChipsAhoy", "NutterButter");
 
     public RobotContainer() {
         configureBindings();
@@ -293,19 +293,20 @@ public class RobotContainer {
             }
         } else {
             switch (autoName) {
-                case "BlueCenterToCenter": return new PathPlannerAuto("BlueCenterToCenter");
-                case "BlueCenterToCenterToOutpost": return new PathPlannerAuto("BlueCenterToCenterToOutpost");
-                case "BlueLeftToCenter": return new PathPlannerAuto("BlueLeftToCenter");
-                case "BlueLeftToCenterToOutpost": return new PathPlannerAuto("BlueLeftToCenterToOutpost");
-                case "BlueRightToCenter": return new PathPlannerAuto("BlueRightToCenter");
-                case "BlueRightToCenterToOutpost": return new PathPlannerAuto("BlueRightToCenterToOutpost");
-                case "BlueDiagonal": return new PathPlannerAuto("BlueDiagonal");
-                case "BlueCenterToCenterToClimb": return new PathPlannerAuto("BlueCenterToCenterToClimb");
-                case "BlueCenterToCenterToOutpostToCenter": return new PathPlannerAuto("BlueCenterToCenterToOutpostToCenter");
-                case "BlueLeftTrenchChaosToLeftTrench": return new PathPlannerAuto("BlueLeftTrenchChaosToLeftTrench");
-                case "BlueLeftTrenchToNeutralStartToNeutralMidToLeftTrench": return new PathPlannerAuto("BlueLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
-                case "BlueRightTrenchToNeutralStartToNeutralMidToRightTrench": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrench");
-                case "BlueRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
+                case "ChocolateChip": return new PathPlannerAuto("BlueCenterToCenter");
+                case "WhiteChocolateChip": return new PathPlannerAuto("BlueCenterToCenterToClimb");
+                case "M&MCookie": return new PathPlannerAuto("BlueCenterToCenterToOutpostToCenter");
+                case "OatmealRaisin": return new PathPlannerAuto("BlueCenterToCenterToOutpost");
+                case "DoubleChocolate": return new PathPlannerAuto("BlueCenterToCenterToOutpostToCenterToClimb");
+                //case "BlueLeftToCenter": return new PathPlannerAuto("BlueLeftToCenter");
+                //case "BlueLeftToCenterToOutpost": return new PathPlannerAuto("BlueLeftToCenterToOutpost");
+                //case "BlueRightToCenter": return new PathPlannerAuto("BlueRightToCenter");
+                //case "BlueRightToCenterToOutpost": return new PathPlannerAuto("BlueRightToCenterToOutpost");
+                //case "BlueDiagonal": return new PathPlannerAuto("BlueDiagonal");
+                case "Oreo": return new PathPlannerAuto("BlueLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
+                case "FortuneCookie": return new PathPlannerAuto("BlueLeftTrenchChaosToLeftTrench");
+                case "ChipsAhoy": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrench");
+                case "NutterButter": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
             }
         }
 

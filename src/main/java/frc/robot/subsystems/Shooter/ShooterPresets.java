@@ -31,7 +31,7 @@ public class ShooterPresets {
 
     //NEW PRESETS 
 
-    // Under the climb bars shot - NEEDS TUNING
+    // Lodged and next to climb - NEEDS TUNING
     public static final double UNDER_CLIMB_RPM = 2200;
     public static final double UNDER_CLIMB_ANGLE = 0;
 
