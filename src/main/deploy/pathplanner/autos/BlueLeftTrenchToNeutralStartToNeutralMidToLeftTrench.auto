@@ -9,28 +9,28 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "AutoFeed"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
                 "type": "path",
                 "data": {
                   "pathName": "BlueLeftTrenchToNeutralStart"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "AutoIntakeLower"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoIntakeRaise"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoIntakeLower"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -45,6 +45,12 @@
                 "data": {
                   "pathName": "BlueLeftTrenchNeutralStartToNeutralMid"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoIntake"
+                }
               }
             ]
           }
@@ -53,6 +59,70 @@
           "type": "path",
           "data": {
             "pathName": "BlueLeftTrenchNeutralMidToLeftTrench"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoTrenchShot"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.3
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoFeed"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoIntakePulseCommand"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoFeed"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoIntakePulseCommand"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         }
       ]

@@ -25,6 +25,9 @@ import frc.robot.autoCommands.AutoFeed;
 import frc.robot.autoCommands.AutoHubShot;
 import frc.robot.autoCommands.AutoIntake;
 import frc.robot.autoCommands.AutoIntakeLower;
+import frc.robot.autoCommands.AutoIntakePulseCommand;
+import frc.robot.autoCommands.AutoIntakeRaise;
+import frc.robot.autoCommands.AutoTrenchShot;
 import frc.robot.autoCommands.Auto_ByOutpostShot;
 import frc.robot.commands.AutoShooterAlignCommand;
 import frc.robot.commands.ByOutpostShot;
@@ -95,6 +98,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("AutoHubShot", new AutoHubShot(shooter));
         NamedCommands.registerCommand("Auto_ByOutpostShot", new Auto_ByOutpostShot(shooter));
         NamedCommands.registerCommand("AutoFeed", new AutoFeed(feed));
+        NamedCommands.registerCommand("AutoTrenchShot", new AutoTrenchShot(shooter));
+        NamedCommands.registerCommand("AutoIntakeRaise", new AutoIntakeRaise(intake));
+        NamedCommands.registerCommand("AutoIntakePulseCommand", new AutoIntakePulseCommand(intake));
 
         // ---------------- NOW configure AutoBuilder ----------------
         drivetrain.configureAutoBuilder();

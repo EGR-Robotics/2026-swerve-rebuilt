@@ -33,6 +33,15 @@ public class Climber extends SubsystemBase {
         setBrakeMode(false);
     }
 
+    //for auto
+    public void autoClimbUp(double triggerVal) {
+        leftClimber.setControl(new VoltageOut(-triggerVal * climbSpeed * voltageNumber));
+    }
+
+    public void autoClimbDown() {
+        leftClimber.setControl(new VoltageOut(climbSpeed * voltageNumber));
+    }
+
     // /** Run only the right climber */
     // public void climbRight() {
     //     rightClimber.setControl(new VoltageOut(climbSpeed * voltageNumber * direction));

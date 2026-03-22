@@ -50,7 +50,6 @@ public class Intake extends SubsystemBase {
         setBrakeMode(false);
     }
 
-
     public void stopAll() {
         stopRoller();
         stopPivot();

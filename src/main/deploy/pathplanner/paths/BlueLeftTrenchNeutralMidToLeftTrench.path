@@ -42,6 +42,18 @@
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
+    },
+    {
+      "name": "AutoTrenchShot",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "AutoIntakePulseCommand",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
     }
   ],
   "globalConstraints": {
