@@ -33,24 +33,24 @@ public class Climber extends SubsystemBase {
         setBrakeMode(false);
     }
 
-    /** Run only the right climber */
-    public void climbRight() {
-        rightClimber.setControl(new VoltageOut(climbSpeed * voltageNumber * direction));
-        leftClimber.setControl(new VoltageOut(0));
-        setBrakeMode(false);
-    }
+    // /** Run only the right climber */
+    // public void climbRight() {
+    //     rightClimber.setControl(new VoltageOut(climbSpeed * voltageNumber * direction));
+    //     leftClimber.setControl(new VoltageOut(0));
+    //     setBrakeMode(false);
+    // }
 
-    /** Run both climbers */
-    public void climbBoth() {
-        leftClimber.setControl(new VoltageOut(climbSpeed * voltageNumber * direction));
-        rightClimber.setControl(new VoltageOut(climbSpeed * voltageNumber * direction));
-        setBrakeMode(false);
-    }
+    // /** Run both climbers */
+    // public void climbBoth() {
+    //     leftClimber.setControl(new VoltageOut(climbSpeed * voltageNumber * direction));
+    //     rightClimber.setControl(new VoltageOut(climbSpeed * voltageNumber * direction));
+    //     setBrakeMode(false);
+    // }
 
     /** Stop both climbers */
     public void stop() {
         leftClimber.setControl(new VoltageOut(0));
-        rightClimber.setControl(new VoltageOut(0));
+        //rightClimber.setControl(new VoltageOut(0));
         setBrakeMode(true);
     }
 

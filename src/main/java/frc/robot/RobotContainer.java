@@ -236,10 +236,15 @@ public class RobotContainer {
         operatorController.povRight().whileTrue(new FeedFromNeutral(shooter));
         operatorController.povLeft().whileTrue(new FeedFromOpposite(shooter));
 
-        operatorController.leftStick().whileTrue(
-            new RunCommand(() -> climber.climbLeftJoystick(operatorController.getLeftY()), climber)
-                .finallyDo(() -> climber.stop())
+        climber.setDefaultCommand(
+            new RunCommand(() -> climber.climbLeftJoystick(-operatorController.getRawAxis(1)), 
+            climber)
         );
+
+        // operatorController.leftStick().whileTrue(
+        //     new RunCommand(() -> climber.climbLeftJoystick(operatorController.getLeftY()), climber)
+        //         .finallyDo(() -> climber.stop())
+        // );
             
         // operatorController.y().onTrue(
         //     new InstantCommand(() -> climber.toggleDirection(), climber)
