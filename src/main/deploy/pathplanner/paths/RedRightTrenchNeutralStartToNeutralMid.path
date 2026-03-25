@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2925421686746983,
-        "y": 4.0
+        "x": 8.8054578313253,
+        "y": 6.865277108433735
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2816144578313255,
-        "y": 4.942
+        "x": 8.803266189886314,
+        "y": 4.418988970670799
       },
       "isLocked": false,
-      "linkedName": "BlueCenter"
+      "linkedName": "RedRightTrenchNeutralZoneStart"
     },
     {
       "anchor": {
-        "x": 0.981,
-        "y": 4.952927710843373
+        "x": 8.849168674698795,
+        "y": 4.406542168674699
       },
       "prevControl": {
-        "x": 2.4109486525790245,
-        "y": 4.940809501923211
+        "x": 8.850375622911244,
+        "y": 6.88280650787306
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BluePreClimb"
+      "linkedName": "RedRightTrenchNeutralZoneMid"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "AutoClimbUp",
-      "waypointRelativePos": 1.0,
+      "name": "AutoIntake",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -49,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Blue",
+  "folder": "Red",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 1.3904012640440258
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

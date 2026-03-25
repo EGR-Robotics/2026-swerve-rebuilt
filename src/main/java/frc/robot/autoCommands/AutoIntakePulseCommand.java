@@ -1,52 +1,55 @@
 package frc.robot.autoCommands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Intake;
 
 public class AutoIntakePulseCommand extends Command {
 
     private final Intake intake;
-    private final Timer timer = new Timer();
-
-    private static final double pulseTime = 0.25; //seconds
-    private static final double pulseVolts = 2.0;   //small movement
-
-    private boolean goingUp = true;
+    private final Command sequence;
 
     public AutoIntakePulseCommand(Intake intake) {
         this.intake = intake;
+
+        // Build the safe, finite sequence
+        this.sequence = Commands.sequence(
+            // Up pulse
+            // Commands.run(() -> intake.setPivotVoltage(-3.0), intake)
+            //     .withTimeout(0.25),
+
+            // // Down pulse
+            // Commands.run(() -> intake.setPivotVoltage(3.0), intake)
+            //     .withTimeout(0.25),
+
+            // // Stop motors
+            // Commands.runOnce(() -> intake.stopAll(), intake),
+
+            // // Wait 3 seconds with motors OFF
+            // Commands.waitSeconds(3.0)
+        );
+
         addRequirements(intake);
     }
 
-     @Override
+    @Override
     public void initialize() {
-        timer.reset();
-        timer.start();
+        sequence.initialize();
     }
 
     @Override
     public void execute() {
-        if (timer.get() > pulseTime) {
-            goingUp = !goingUp;
-            timer.reset();
-        }
-
-        if (goingUp) {
-            intake.setPivotVoltage(-pulseVolts);
-        } else {
-            intake.setPivotVoltage(pulseVolts); 
-        }
+        sequence.execute();
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.stopPivot();
-        timer.stop();
+        sequence.end(interrupted);
+        intake.stopAll();
     }
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 6;
+        return sequence.isFinished();
     }
 }

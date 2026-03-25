@@ -2,18 +2,19 @@ package frc.robot.autoCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Shooter.ShooterPresets;
 
-public class AutoClimbUp extends Command {
+public class AutoFeedFromNeutral extends Command {
 
-    private final Climber climber;
+    private final Shooter shooter;
     private Timer timer;
 
-    public AutoClimbUp(Climber climber) {
-        this.climber = climber;
+    public AutoFeedFromNeutral(Shooter shooter) {
+        this.shooter = shooter;
         this.timer = new Timer();
 
-        addRequirements(climber);
+        addRequirements(shooter);
     }
 
     @Override
@@ -21,7 +22,9 @@ public class AutoClimbUp extends Command {
         timer.reset();
         timer.start();
 
-        climber.autoClimbUp();
+        shooter.setHoodAngle(ShooterPresets.NEUTRAL_ANGLE);
+        shooter.setFlywheelRPM(ShooterPresets.NEUTRAL_RPM);
+
     }
 
     @Override
@@ -35,11 +38,12 @@ public class AutoClimbUp extends Command {
     public void end(boolean interrupted) {
         timer.stop();
 
-        climber.stop();
+        shooter.setFlywheelRPM(0);
+        shooter.setHoodAngle(5);
     }
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 1;
+        return timer.get() >= 8;
     }
 }

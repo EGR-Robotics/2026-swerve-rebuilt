@@ -22,7 +22,7 @@ public class AutoIntake extends Command {
         timer.reset();
         timer.start();
 
-        intake.intake(1);
+        intake.intake();
     }
 
     @Override

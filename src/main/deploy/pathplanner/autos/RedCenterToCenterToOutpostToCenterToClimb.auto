@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "AutoIntakeRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AutoIntakeLower"
           }
         },
@@ -33,13 +39,26 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.2
+                        "waitTime": 0.3
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "parallel",
                       "data": {
-                        "name": "AutoFeed"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoFeed"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoIntakePulseCommand"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -83,19 +102,75 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.2
+                        "waitTime": 0.3
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "parallel",
                       "data": {
-                        "name": "AutoFeed"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoFeed"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoIntakePulseCommand"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoFeed"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoIntakePulseCommand"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RedCenterToPreClimb"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoClimbUp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RedPreClimbToPostClimb"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoClimbDown"
           }
         }
       ]

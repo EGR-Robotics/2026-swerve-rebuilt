@@ -39,6 +39,18 @@
       "command": null
     },
     {
+      "name": "AutoIntakeRaise",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "AutoIntakePulseCommand",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "AutoHubShot",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,

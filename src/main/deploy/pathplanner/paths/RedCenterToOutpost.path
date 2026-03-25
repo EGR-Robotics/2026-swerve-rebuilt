@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 16.05,
-        "y": 7.63
+        "y": 7.62
       },
       "prevControl": {
         "x": 15.888463896370558,
-        "y": 7.358689532710407
+        "y": 7.348689532710408
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,6 +46,12 @@
     },
     {
       "name": "AutoFeed",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "AutoIntakePulseCommand",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null

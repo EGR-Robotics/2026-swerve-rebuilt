@@ -21,7 +21,10 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.autoCommands.AutoClimbDown;
+import frc.robot.autoCommands.AutoClimbUp;
 import frc.robot.autoCommands.AutoFeed;
+import frc.robot.autoCommands.AutoFeedFromNeutral;
 import frc.robot.autoCommands.AutoHubShot;
 import frc.robot.autoCommands.AutoIntake;
 import frc.robot.autoCommands.AutoIntakeLower;
@@ -29,12 +32,10 @@ import frc.robot.autoCommands.AutoIntakePulseCommand;
 import frc.robot.autoCommands.AutoIntakeRaise;
 import frc.robot.autoCommands.AutoTrenchShot;
 import frc.robot.autoCommands.Auto_ByOutpostShot;
-import frc.robot.commands.AutoShooterAlignCommand;
 import frc.robot.commands.ByOutpostShot;
 import frc.robot.commands.FeedFromNeutral;
 import frc.robot.commands.FeedFromOpposite;
 import frc.robot.commands.Hub2Preset;
-import frc.robot.commands.IntakePulseCommand;
 import frc.robot.commands.TrenchShot;
 import frc.robot.commands.UnderClimbShot;
 import frc.robot.generated.TunerConstants;
@@ -84,8 +85,36 @@ public class RobotContainer {
     private SendableChooser<String> allianceChooser = new SendableChooser<>();
     private SendableChooser<String> autoChooser = new SendableChooser<>();
 
-    private final List<String> redAutos = List.of("RedCenterToCenter", "RedCenterToCenterToOutpost", "RedLeftToCenter", "RedLeftToCenterToOutpost", "RedRightToCenter", "RedRightToCenterToOutpost", "RedCenterToCenterToOutpostToNeutral", "RedCenterToCenterToOutpostToCenter", "RedDiagonal", "RedCenterToCenterToOutpostToCenterToClimb", "RedLeftToCenterToOutpostToNeutral", "RedRightToCenterToOutpostToNeutral");
-    private final List<String> blueAutos = List.of("ChocolateChip", "WhiteChocolateChip", "M&MCookie", "OatmealRaisin", "DoubleChocolate", "Oreo", "FortuneCookie", "ChipsAhoy", "NutterButter");
+    private final List<String> redAutos = List.of(
+        "ChocolateChip", 
+        "M&MCookie", 
+        "OatmealRaisin", 
+        "DoubleChocolate", 
+        "Oreo",
+        "ChipsAhoy",
+        "NutterButter"
+
+        // "RedLeftToCenter", 
+        // "RedLeftToCenterToOutpost", 
+        // "RedRightToCenter", 
+        // "RedRightToCenterToOutpost", 
+        // "RedDiagonal", 
+        // "RedLeftToCenterToOutpostToNeutral", 
+        // "RedRightToCenterToOutpostToNeutral"
+        // "RedCenterToCenterToOutpostToNeutral", 
+    );
+
+    private final List<String> blueAutos = List.of(
+        "ChocolateChip", 
+        "WhiteChocolateChip", 
+        "M&MCookie", 
+        "OatmealRaisin", 
+        "DoubleChocolate", 
+        "Oreo", 
+        "FortuneCookie", 
+        "ChipsAhoy", 
+        "NutterButter"
+    );
 
     public RobotContainer() {
         configureBindings();
@@ -97,6 +126,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("AutoIntake", new AutoIntake(intake));
         NamedCommands.registerCommand("AutoHubShot", new AutoHubShot(shooter));
         NamedCommands.registerCommand("Auto_ByOutpostShot", new Auto_ByOutpostShot(shooter));
+        NamedCommands.registerCommand("AutoFeedFromNeutral", new AutoFeedFromNeutral(shooter));
         NamedCommands.registerCommand("AutoFeed", new AutoFeed(feed));
         NamedCommands.registerCommand("AutoTrenchShot", new AutoTrenchShot(shooter));
         NamedCommands.registerCommand("AutoIntakeRaise", new AutoIntakeRaise(intake));
@@ -150,7 +180,7 @@ public class RobotContainer {
                 double limitedY = yLimiter.calculate(shapedY);
                 double limitedRot = rotLimiter.calculate(shapedRot);
 
-                if (operatorController.leftBumper().getAsBoolean()) {
+                if (driverController.x().getAsBoolean()) {
                     return drive.withVelocityX(limitedX * SlowSpeed)
                             .withVelocityY(limitedY * SlowSpeed)
                             .withRotationalRate(limitedRot * MaxAngularRate);
@@ -170,7 +200,7 @@ public class RobotContainer {
 
         // DRIVER CONTROLS
         driverController.leftTrigger().whileTrue(
-            new RunCommand(() -> intake.intake(driverController.getLeftTriggerAxis()), intake)
+            new RunCommand(() -> intake.intake(), intake)
                 .finallyDo(() -> intake.stopRoller())
         );
 
@@ -222,17 +252,29 @@ public class RobotContainer {
             }, shooter).finallyDo(() -> shooter.setFlywheelRPM(0))
         );
 
+        // operatorController.rightTrigger().whileTrue(
+        //     Commands.parallel(
+        //         Commands.startEnd(
+        //             () -> feed.feedFuel(12000),
+        //             () -> feed.stopFeed(0),
+        //             feed),
+        //     getIntakePulseCommand())
+        // );
+
         operatorController.rightTrigger().whileTrue(
-            new RunCommand(() -> feed.feedFuel(12000), feed)
-            .finallyDo(() -> feed.stopFeed(0))
-            .alongWith(new IntakePulseCommand(intake))
+            new RunCommand(() -> feed.feedFuel(), feed)
+                .finallyDo(() -> feed.stopFeed(0))
         );
 
+
         
-        operatorController.rightBumper().whileTrue(
-            new RunCommand(() -> feed.reverseRoller(12000), feed)
-            .finallyDo(() -> feed.stopRoller())
-        );
+        // operatorController.rightBumper().whileTrue(
+        //     new RunCommand(() -> feed.reverseRoller(12000), feed)
+        //     .finallyDo(() -> feed.stopRoller())
+        // );
+
+        operatorController.leftBumper().whileTrue(new AutoClimbUp(climber));
+        operatorController.rightBumper().whileTrue(new AutoClimbDown(climber));
 
         operatorController.y().whileTrue(new ByOutpostShot(shooter));
         operatorController.x().whileTrue(new TrenchShot(shooter));
@@ -242,12 +284,12 @@ public class RobotContainer {
         operatorController.povRight().whileTrue(new FeedFromNeutral(shooter));
         operatorController.povLeft().whileTrue(new FeedFromOpposite(shooter));
 
-        climber.setDefaultCommand(
-            new RunCommand(() -> climber.climbLeftJoystick(-operatorController.getRawAxis(1)), 
-            climber)
-        );
+        // climber.setDefaultCommand(
+        //     new RunCommand(() -> climber.climbLeftJoystick(-operatorController.getRawAxis(1)), 
+        //     climber).finallyDo(() -> climber.stop())
+        // );
 
-        // operatorController.leftStick().whileTrue(
+        // operatorController.leftStick().whileT1rue(
         //     new RunCommand(() -> climber.climbLeftJoystick(operatorController.getLeftY()), climber)
         //         .finallyDo(() -> climber.stop())
         // );
@@ -274,6 +316,25 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
+   public Command getIntakePulseCommand() {
+    return Commands.sequence(
+        // Up pulse
+        Commands.run(() -> intake.setPivotVoltage(-3.0), intake)
+            .withTimeout(0.25),
+
+        // Down pulse
+        Commands.run(() -> intake.setPivotVoltage(3.0), intake)
+            .withTimeout(0.25),
+
+        // Fully stop pivot + intake roller
+        Commands.runOnce(() -> intake.stopAll(), intake),
+
+        // Wait 3 seconds with motors OFF
+        Commands.waitSeconds(3.0)
+    );
+}
+
+
     public Command getAutonomousCommand() {
         String alliance = allianceChooser.getSelected();
         String autoName = autoChooser.getSelected();
@@ -284,18 +345,24 @@ public class RobotContainer {
 
         if (alliance.equals("RED")) {
             switch (autoName) {
-                case "RedCenterToCenter": return new PathPlannerAuto("RedCenterToCenter");
-                case "RedCenterToCenterToOutpost": return new PathPlannerAuto("RedCenterToCenterToOutpost");
-                case "RedLeftToCenter": return new PathPlannerAuto("RedLeftToCenter");
-                case "RedLeftToCenterToOutpost": return new PathPlannerAuto("RedLeftToCenterToOutpost");
-                case "RedRightToCenter": return new PathPlannerAuto("RedRightToCenter");
-                case "RedRightToCenterToOutpost": return new PathPlannerAuto("RedRightToCenterToOutpost");
-                case "RedCenterToCenterToOutpostToNeutral": return new PathPlannerAuto("RedCenterToCenterToOutpostToNeutral");
-                case "RedCenterToCenterToOutpostToCenter": return new PathPlannerAuto("RedCenterToCenterToOutpostToCenter");
-                case "RedDiagonal": return new PathPlannerAuto("RedDiagonal");
-                case "RedCenterToCenterToOutpostToCenterToClimb": return new PathPlannerAuto("RedCenterToCenterToOutpostToCenterToClimb");
-                case "RedLeftToCenterToOutpostToNeutral": return new PathPlannerAuto("RedLeftToCenterToOutpostToNeutral");
-                case "RedRightToCenterToOutpostToNeutral": return new PathPlannerAuto("RedRightToCenterToOutpostToNeutral");
+                case "ChocolateChip": return new PathPlannerAuto("RedCenterToCenter");
+                
+                case "M&MCookie": return new PathPlannerAuto("RedCenterToCenterToOutpostToCenter");
+                case "OatmealRaisin": return new PathPlannerAuto("RedCenterToCenterToOutpost");
+                case "DoubleChocolate": return new PathPlannerAuto("RedCenterToCenterToOutpostToCenterToClimb");
+
+                // case "RedLeftToCenter": return new PathPlannerAuto("RedLeftToCenter");
+                // case "RedLeftToCenterToOutpost": return new PathPlannerAuto("RedLeftToCenterToOutpost");
+                // case "RedRightToCenter": return new PathPlannerAuto("RedRightToCenter");
+                // case "RedRightToCenterToOutpost": return new PathPlannerAuto("RedRightToCenterToOutpost");
+                // case "RedDiagonal": return new PathPlannerAuto("RedDiagonal");
+                // case "RedLeftToCenterToOutpostToNeutral": return new PathPlannerAuto("RedLeftToCenterToOutpostToNeutral");
+                // case "RedRightToCenterToOutpostToNeutral": return new PathPlannerAuto("RedRightToCenterToOutpostToNeutral");
+                // case "RedCenterToCenterToOutpostToNeutral": return new PathPlannerAuto("RedCenterToCenterToOutpostToNeutral");
+
+                case "Oreo": return new PathPlannerAuto("RedLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
+                case "ChipsAhoy": return new PathPlannerAuto("RedRightTrenchToNeutralStartToNeutralMidToRightTrench");
+                case "NutterButter": return new PathPlannerAuto("RedRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
             }
         } else {
             switch (autoName) {
@@ -304,13 +371,15 @@ public class RobotContainer {
                 case "M&MCookie": return new PathPlannerAuto("BlueCenterToCenterToOutpostToCenter");
                 case "OatmealRaisin": return new PathPlannerAuto("BlueCenterToCenterToOutpost");
                 case "DoubleChocolate": return new PathPlannerAuto("BlueCenterToCenterToOutpostToCenterToClimb");
+                
                 //case "BlueLeftToCenter": return new PathPlannerAuto("BlueLeftToCenter");
                 //case "BlueLeftToCenterToOutpost": return new PathPlannerAuto("BlueLeftToCenterToOutpost");
                 //case "BlueRightToCenter": return new PathPlannerAuto("BlueRightToCenter");
                 //case "BlueRightToCenterToOutpost": return new PathPlannerAuto("BlueRightToCenterToOutpost");
                 //case "BlueDiagonal": return new PathPlannerAuto("BlueDiagonal");
-                case "Oreo": return new PathPlannerAuto("BlueLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
+
                 case "FortuneCookie": return new PathPlannerAuto("BlueLeftTrenchChaosToLeftTrench");
+                case "Oreo": return new PathPlannerAuto("BlueLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
                 case "ChipsAhoy": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrench");
                 case "NutterButter": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
             }

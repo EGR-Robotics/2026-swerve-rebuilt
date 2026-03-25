@@ -5,21 +5,54 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "AutoIntakeRaise"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RedLeftTrenchToNeutralStart"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoIntakeRaise"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoIntakeLower"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "AutoIntakeLower"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RedCenterToCenter"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RedLeftTrenchNeutralStartToNeutralMidFeed"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -29,7 +62,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoHubShot"
+                  "name": "AutoFeedFromNeutral"
                 }
               },
               {
@@ -60,6 +93,25 @@
                           }
                         ]
                       }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoFeed"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoIntakePulseCommand"
+                            }
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
@@ -68,21 +120,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "RedCenterToOutpost"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RedOutpostToCenter"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RedLeftTrenchNeutralMidFeedToLeftTrenchCurve"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -92,7 +145,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoHubShot"
+                  "name": "AutoTrenchShot"
                 }
               },
               {
@@ -153,6 +206,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Red Center",
+  "folder": "Red Left Trench",
   "choreoAuto": false
 }

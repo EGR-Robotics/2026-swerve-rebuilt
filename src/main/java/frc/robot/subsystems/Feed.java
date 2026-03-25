@@ -54,13 +54,13 @@ public class Feed extends SubsystemBase{
         roller.setControl(new VoltageOut(0));
     }
 
-    public void feedFuel(double rpm){
-        setRollerRPM(rpm);
-        setFeederSpeed(rpm);
+    public void feedFuel(){
+        setRollerRPM(3000);
+        setFeederSpeed(6000);
     }
 
     public void reverseRoller(double rpm){
-        setRollerRPM(-rpm);
+        setRollerRPM(rpm);
     }
 
      public void stopFeed(double rpm){
