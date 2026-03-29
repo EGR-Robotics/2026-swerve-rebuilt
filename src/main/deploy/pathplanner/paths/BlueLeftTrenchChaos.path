@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.379734939759036,
-        "y": 7.378879518072289
+        "x": 4.336024096385542,
+        "y": 7.247746987951807
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.614566265060241,
-        "y": 7.5318674698795185
+        "x": 6.018891566265061,
+        "y": 7.44444578313253
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "BlueLeftTrenchStart"
     },
     {
       "anchor": {
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.47053941908713803,
+      "waypointRelativePos": 0.44564315352697087,
       "rotationDegrees": 180.0
     },
     {
@@ -84,7 +84,7 @@
   "folder": "Blue",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": false
 }

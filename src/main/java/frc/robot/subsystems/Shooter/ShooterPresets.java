@@ -26,7 +26,7 @@ public class ShooterPresets {
     public static final double OUTPOST_ANGLE = 0;
 
     // Shot that is slightly in front of the climb, used most of the match - NEEDS TUNING
-    public static final double HUB2_RPM = 2145;
+    public static final double HUB2_RPM = 2130;
     public static final double HUB2_ANGLE = 0;
 
     //NEW PRESETS 

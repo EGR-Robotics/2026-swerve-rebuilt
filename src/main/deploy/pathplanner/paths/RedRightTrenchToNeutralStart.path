@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.46655421686747,
-        "y": 7.577120481927711
+        "x": 10.30255421686747,
+        "y": 7.116614457831325
       },
       "isLocked": false,
       "linkedName": "RedRightTrenchNeutralZoneEnd"
@@ -20,8 +20,8 @@
         "y": 6.865277108433735
       },
       "prevControl": {
-        "x": 8.8054578313253,
-        "y": 7.837843373493977
+        "x": 9.155144578313251,
+        "y": 7.859698795180723
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.24398340248962647,
+      "waypointRelativePos": 0.3319502074688804,
       "rotationDegrees": -90.0
     }
   ],

@@ -36,7 +36,7 @@ public class AutoIntake extends Command {
     public void end(boolean interrupted) {
         timer.stop();
 
-        intake.stopRoller();
+        intake.stop();
     }
 
     @Override

@@ -3,28 +3,29 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakePivot;
 
 public class IntakePulseCommand extends Command {
 
-    private final Intake intake;
+    private final IntakePivot intakepivot;
     private final Command sequence;
 
-    public IntakePulseCommand(Intake intake) {
-        this.intake = intake;
+    public IntakePulseCommand(IntakePivot intakepivot) {
+        this.intakepivot = intakepivot;
 
         this.sequence = Commands.sequence(
-            Commands.run(() -> intake.raiseIntake(), intake)
+            Commands.run(() -> intakepivot.raiseIntake(), intakepivot)
                 .withTimeout(0.35),
 
-            Commands.run(() -> intake.lowerIntake(), intake)
+            Commands.run(() -> intakepivot.lowerIntake(), intakepivot)
                 .withTimeout(0.05),
 
-            Commands.runOnce(() -> intake.stopAll(), intake),
+            Commands.runOnce(() -> intakepivot.stop(), intakepivot),
 
             Commands.waitSeconds(0.2)
         );
 
-        addRequirements(intake);
+        addRequirements(intakepivot);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class IntakePulseCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         sequence.end(interrupted);
-        intake.stopAll();
+        intakepivot.stop();
     }
 
     @Override

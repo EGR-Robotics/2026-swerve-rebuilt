@@ -44,6 +44,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feed;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.ShooterTable;
@@ -80,6 +81,7 @@ public class RobotContainer {
     public Climber climber = new Climber();
     public Feed feed = new Feed();
     public Intake intake = new Intake();
+    public IntakePivot intakepivot = new IntakePivot();
     public Vision vision = new Vision();
     public ShooterTable table = new ShooterTable();
 
@@ -125,15 +127,15 @@ public class RobotContainer {
         configureAutoSelectors();
 
         // ---------------- REGISTER NAMED COMMANDS FIRST ----------------
-        NamedCommands.registerCommand("AutoIntakeLower", new AutoIntakeLower(intake));
+        NamedCommands.registerCommand("AutoIntakeLower", new AutoIntakeLower(intakepivot));
         NamedCommands.registerCommand("AutoIntake", new AutoIntake(intake));
         NamedCommands.registerCommand("AutoHubShot", new AutoHubShot(shooter));
         NamedCommands.registerCommand("Auto_ByOutpostShot", new Auto_ByOutpostShot(shooter));
         NamedCommands.registerCommand("AutoFeedFromNeutral", new AutoFeedFromNeutral(shooter));
         NamedCommands.registerCommand("AutoFeed", new AutoFeed(feed));
         NamedCommands.registerCommand("AutoTrenchShot", new AutoTrenchShot(shooter));
-        NamedCommands.registerCommand("AutoIntakeRaise", new AutoIntakeRaise(intake));
-        NamedCommands.registerCommand("AutoIntakePulseCommand", new AutoIntakePulseCommand(intake));
+        NamedCommands.registerCommand("AutoIntakeRaise", new AutoIntakeRaise(intakepivot));
+        NamedCommands.registerCommand("AutoIntakePulseCommand", new AutoIntakePulseCommand(intakepivot));
 
         // ---------------- NOW configure AutoBuilder ----------------
         drivetrain.configureAutoBuilder();
@@ -204,26 +206,32 @@ public class RobotContainer {
         // DRIVER CONTROLS
         driverController.leftTrigger().whileTrue(
             new RunCommand(() -> intake.intake(), intake)
-                .finallyDo(() -> intake.stopRoller())
+                .finallyDo(() -> intake.stop())
         );
 
         driverController.leftBumper().whileTrue(
-            new RunCommand(() -> intake.lowerIntake(), intake)
+            new RunCommand(() -> intakepivot.lowerIntake(), intake)
         ).onFalse(
-            new InstantCommand(() -> intake.stopPivot(), intake)
+            new InstantCommand(() -> intakepivot.stop(), intake)
         );
 
         driverController.rightTrigger().whileTrue(
-            new RunCommand(() -> intake.reverseIntake(), intake)
-                .finallyDo(() -> intake.stopRoller())
+            new RunCommand(() -> intake.reverse(), intake)
+                .finallyDo(() -> intake.stop())
         );
 
         driverController.rightBumper().whileTrue(
-            new RunCommand(() -> intake.raiseIntake(), intake)
+            new RunCommand(() -> intakepivot.raiseIntake(), intake)
         ).onFalse(
-            new InstantCommand(() -> intake.stopPivot(), intake)
+            new InstantCommand(() -> intakepivot.stop(), intake)
         );
         
+       driverController.y().whileTrue(
+            new RunCommand(() -> feed.reverseRoller(6000), feed)
+        ).onFalse(
+            new InstantCommand(() -> feed.stopRoller(), feed)
+        );
+
         driverController.povUp().onTrue(
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric())
         );
@@ -261,7 +269,7 @@ public class RobotContainer {
                     () -> feed.feedFuel(),
                     () -> feed.stopFeed(0),
                     feed),
-                new IntakePulseCommand(intake))
+                new IntakePulseCommand(intakepivot))
         );
 
         // operatorController.rightTrigger().whileTrue(
@@ -318,25 +326,6 @@ public class RobotContainer {
  
         drivetrain.registerTelemetry(logger::telemeterize);
     }
-
-   public Command getIntakePulseCommand() {
-    return Commands.sequence(
-        // Up pulse
-        Commands.run(() -> intake.setPivotVoltage(-3.0), intake)
-            .withTimeout(0.25),
-
-        // Down pulse
-        Commands.run(() -> intake.setPivotVoltage(3.0), intake)
-            .withTimeout(0.25),
-
-        // Fully stop pivot + intake roller
-        Commands.runOnce(() -> intake.stopAll(), intake),
-
-        // Wait 3 seconds with motors OFF
-        Commands.waitSeconds(3.0)
-    );
-}
-
 
     public Command getAutonomousCommand() {
     String alliance = allianceChooser.getSelected();

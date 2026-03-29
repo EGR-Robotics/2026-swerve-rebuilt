@@ -3,17 +3,18 @@ package frc.robot.autoCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakePivot;
 
 public class AutoIntakeRaise extends Command {
 
-    private final Intake intake;
+    private final IntakePivot intakepivot;
     private Timer timer;
 
-    public AutoIntakeRaise(Intake intake) {
-        this.intake = intake;
+    public AutoIntakeRaise(IntakePivot intakepivot) {
+        this.intakepivot = intakepivot;
         this.timer = new Timer();
 
-        addRequirements(intake);
+        addRequirements(intakepivot);
     }
 
     @Override
@@ -21,7 +22,7 @@ public class AutoIntakeRaise extends Command {
         timer.reset();
         timer.start();
 
-        intake.raiseIntake();
+        intakepivot.raiseIntake();
     }
 
     @Override
@@ -35,7 +36,7 @@ public class AutoIntakeRaise extends Command {
     public void end(boolean interrupted) {
         timer.stop();
 
-        intake.stopPivot();
+        intakepivot.stop();
     }
 
     @Override
