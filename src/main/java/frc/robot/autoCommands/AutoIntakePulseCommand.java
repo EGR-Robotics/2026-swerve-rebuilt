@@ -24,7 +24,7 @@ public class AutoIntakePulseCommand extends Command {
 
         // Rebuild a fresh sequence each time (prevents WPILib index errors)
         sequence = Commands.sequence(
-            Commands.run(() -> intake.raiseIntake(), intake).withTimeout(0.2),
+            Commands.run(() -> intake.raiseIntake(), intake).withTimeout(0.35),
             Commands.run(() -> intake.lowerIntake(), intake).withTimeout(0.05),
             Commands.runOnce(() -> intake.stopAll(), intake),
             Commands.waitSeconds(0.2)
@@ -42,7 +42,7 @@ public class AutoIntakePulseCommand extends Command {
             sequence.end(false);
 
             sequence = Commands.sequence(
-                Commands.run(() -> intake.raiseIntake(), intake).withTimeout(0.2),
+                Commands.run(() -> intake.raiseIntake(), intake).withTimeout(0.35),
                 Commands.run(() -> intake.lowerIntake(), intake).withTimeout(0.05),
                 Commands.runOnce(() -> intake.stopAll(), intake),
                 Commands.waitSeconds(0.2)

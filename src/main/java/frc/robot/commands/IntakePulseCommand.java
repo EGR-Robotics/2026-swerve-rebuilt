@@ -14,7 +14,7 @@ public class IntakePulseCommand extends Command {
 
         this.sequence = Commands.sequence(
             Commands.run(() -> intake.raiseIntake(), intake)
-                .withTimeout(0.2),
+                .withTimeout(0.35),
 
             Commands.run(() -> intake.lowerIntake(), intake)
                 .withTimeout(0.05),

@@ -35,6 +35,7 @@ import frc.robot.autoCommands.Auto_ByOutpostShot;
 import frc.robot.commands.ByOutpostShot;
 import frc.robot.commands.FeedFromNeutral;
 import frc.robot.commands.FeedFromOpposite;
+import frc.robot.commands.IntakePulseCommand;
 import frc.robot.commands.Hub2Preset;
 import frc.robot.commands.TrenchShot;
 import frc.robot.commands.UnderClimbShot;
@@ -102,6 +103,8 @@ public class RobotContainer {
         // "RedLeftToCenterToOutpostToNeutral", 
         // "RedRightToCenterToOutpostToNeutral"
         // "RedCenterToCenterToOutpostToNeutral", 
+
+
     );
 
     private final List<String> blueAutos = List.of(
@@ -252,19 +255,19 @@ public class RobotContainer {
             }, shooter).finallyDo(() -> shooter.setFlywheelRPM(0))
         );
 
-        // operatorController.rightTrigger().whileTrue(
-        //     Commands.parallel(
-        //         Commands.startEnd(
-        //             () -> feed.feedFuel(12000),
-        //             () -> feed.stopFeed(0),
-        //             feed),
-        //     getIntakePulseCommand())
-        // );
-
-        operatorController.rightTrigger().whileTrue(
-            new RunCommand(() -> feed.feedFuel(), feed)
-                .finallyDo(() -> feed.stopFeed(0))
+      operatorController.rightTrigger().whileTrue(
+            Commands.parallel(
+                Commands.startEnd(
+                    () -> feed.feedFuel(),
+                    () -> feed.stopFeed(0),
+                    feed),
+                new IntakePulseCommand(intake))
         );
+
+        // operatorController.rightTrigger().whileTrue(
+        //     new RunCommand(() -> feed.feedFuel(), feed)
+        //         .finallyDo(() -> feed.stopFeed(0))
+        // );
 
 
         
@@ -336,55 +339,48 @@ public class RobotContainer {
 
 
     public Command getAutonomousCommand() {
-        String alliance = allianceChooser.getSelected();
-        String autoName = autoChooser.getSelected();
-        return buildAutoCommand(alliance, autoName);
+    String alliance = allianceChooser.getSelected();
+    String autoName = autoChooser.getSelected();
+
+    // Failsafe defaults so we never NPE
+    if (alliance == null) {
+        alliance = "RED";
     }
+
+    if (autoName == null) {
+        return Commands.print("No auto selected (autoName was null)");
+    }
+
+    return buildAutoCommand(alliance, autoName);
+}
+
 
     private Command buildAutoCommand(String alliance, String autoName) {
 
-        if (alliance.equals("RED")) {
-            switch (autoName) {
-                case "ChocolateChip": return new PathPlannerAuto("RedCenterToCenter");
-                
-                case "M&MCookie": return new PathPlannerAuto("RedCenterToCenterToOutpostToCenter");
-                case "OatmealRaisin": return new PathPlannerAuto("RedCenterToCenterToOutpost");
-                case "DoubleChocolate": return new PathPlannerAuto("RedCenterToCenterToOutpostToCenterToClimb");
-
-                // case "RedLeftToCenter": return new PathPlannerAuto("RedLeftToCenter");
-                // case "RedLeftToCenterToOutpost": return new PathPlannerAuto("RedLeftToCenterToOutpost");
-                // case "RedRightToCenter": return new PathPlannerAuto("RedRightToCenter");
-                // case "RedRightToCenterToOutpost": return new PathPlannerAuto("RedRightToCenterToOutpost");
-                // case "RedDiagonal": return new PathPlannerAuto("RedDiagonal");
-                // case "RedLeftToCenterToOutpostToNeutral": return new PathPlannerAuto("RedLeftToCenterToOutpostToNeutral");
-                // case "RedRightToCenterToOutpostToNeutral": return new PathPlannerAuto("RedRightToCenterToOutpostToNeutral");
-                // case "RedCenterToCenterToOutpostToNeutral": return new PathPlannerAuto("RedCenterToCenterToOutpostToNeutral");
-
-                case "Oreo": return new PathPlannerAuto("RedLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
-                case "ChipsAhoy": return new PathPlannerAuto("RedRightTrenchToNeutralStartToNeutralMidToRightTrench");
-                case "NutterButter": return new PathPlannerAuto("RedRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
-            }
-        } else {
-            switch (autoName) {
-                case "ChocolateChip": return new PathPlannerAuto("BlueCenterToCenter");
-                case "WhiteChocolateChip": return new PathPlannerAuto("BlueCenterToCenterToClimb");
-                case "M&MCookie": return new PathPlannerAuto("BlueCenterToCenterToOutpostToCenter");
-                case "OatmealRaisin": return new PathPlannerAuto("BlueCenterToCenterToOutpost");
-                case "DoubleChocolate": return new PathPlannerAuto("BlueCenterToCenterToOutpostToCenterToClimb");
-                
-                //case "BlueLeftToCenter": return new PathPlannerAuto("BlueLeftToCenter");
-                //case "BlueLeftToCenterToOutpost": return new PathPlannerAuto("BlueLeftToCenterToOutpost");
-                //case "BlueRightToCenter": return new PathPlannerAuto("BlueRightToCenter");
-                //case "BlueRightToCenterToOutpost": return new PathPlannerAuto("BlueRightToCenterToOutpost");
-                //case "BlueDiagonal": return new PathPlannerAuto("BlueDiagonal");
-
-                case "FortuneCookie": return new PathPlannerAuto("BlueLeftTrenchChaosToLeftTrench");
-                case "Oreo": return new PathPlannerAuto("BlueLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
-                case "ChipsAhoy": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrench");
-                case "NutterButter": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
-            }
+    if ("RED".equals(alliance)) {
+        switch (autoName) {
+            case "ChocolateChip": return new PathPlannerAuto("RedCenterToCenter");
+            case "M&MCookie": return new PathPlannerAuto("RedCenterToCenterToOutpostToCenter");
+            case "OatmealRaisin": return new PathPlannerAuto("RedCenterToCenterToOutpost");
+            case "DoubleChocolate": return new PathPlannerAuto("RedCenterToCenterToOutpostToCenterToClimb");
+            case "Oreo": return new PathPlannerAuto("RedLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
+            case "ChipsAhoy": return new PathPlannerAuto("RedRightTrenchToNeutralStartToNeutralMidToRightTrench");
+            case "NutterButter": return new PathPlannerAuto("RedRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
         }
-
-        return Commands.print("No auto selected");
+    } else {
+        switch (autoName) {
+            case "ChocolateChip": return new PathPlannerAuto("BlueCenterToCenter");
+            case "WhiteChocolateChip": return new PathPlannerAuto("BlueCenterToCenterToClimb");
+            case "OatmealRaisin": return new PathPlannerAuto("BlueCenterToCenterToOutpost");
+            case "M&MCookie": return new PathPlannerAuto("BlueCenterToCenterToOutpostToCenter");
+            case "DoubleChocolate": return new PathPlannerAuto("BlueCenterToCenterToOutpostToCenterToClimb");
+            case "FortuneCookie": return new PathPlannerAuto("BlueLeftTrenchChaosToLeftTrench");
+            case "Oreo": return new PathPlannerAuto("BlueLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
+            case "ChipsAhoy": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrench");
+            case "NutterButter": return new PathPlannerAuto("BlueRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
+        }
     }
-}
+
+    return Commands.print("No auto selected");
+    }
+}   
