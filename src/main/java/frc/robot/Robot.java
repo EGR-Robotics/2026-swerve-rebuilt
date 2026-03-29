@@ -59,9 +59,10 @@ public class Robot extends TimedRobot {
         // Disable Phoenix logging to prevent disk spam + CPU overload
         com.ctre.phoenix6.SignalLogger.stop();
 
-        m_robotContainer.vision.initialize();
+        // m_robotContainer.vision.initialize();
     }
 
+    
 
     @Override
     public void teleopInit() {

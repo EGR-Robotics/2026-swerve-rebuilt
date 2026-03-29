@@ -36,6 +36,6 @@ public class ShooterPresets {
     public static final double UNDER_CLIMB_ANGLE = 0;
 
     // Robot slightly under trench and angled towards hub shot - NEEDS TUNING
-    public static final double TRENCH_RPM = 2090;
+    public static final double TRENCH_RPM = 2140;
     public static final double TRENCH_ANGLE = 0;
 }

@@ -42,6 +42,6 @@ public class AutoFeed extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 6;
+        return timer.get() >= 3;
     }
 }

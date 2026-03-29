@@ -139,6 +139,12 @@
                             "data": {
                               "name": "AutoIntakePulseCommand"
                             }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AutoHubShot"
+                            }
                           }
                         ]
                       }

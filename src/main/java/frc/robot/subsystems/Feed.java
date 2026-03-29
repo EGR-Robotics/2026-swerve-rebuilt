@@ -26,6 +26,11 @@ public class Feed extends SubsystemBase{
         feederCfg.Slot0.kP = 0.1;
         feederCfg.Slot0.kI = 0.0;
         feederCfg.Slot0.kD = 0.0;
+
+        // Current Limits
+        feederCfg.CurrentLimits.SupplyCurrentLimitEnable = true;
+        feederCfg.CurrentLimits.SupplyCurrentLimit = 25;
+
         shooterFeeder.getConfigurator().apply(feederCfg, 0.25);
 
         TalonFXConfiguration rollerCfg = new TalonFXConfiguration();
@@ -33,6 +38,11 @@ public class Feed extends SubsystemBase{
         rollerCfg.Slot0.kP = 0.1;
         rollerCfg.Slot0.kI = 0.0;
         rollerCfg.Slot0.kD = 0.0;
+
+        // Current Limits
+        rollerCfg.CurrentLimits.SupplyCurrentLimitEnable = true;
+        rollerCfg.CurrentLimits.SupplyCurrentLimit = 25;
+
         roller.getConfigurator().apply(rollerCfg, 0.25);
     }
 
@@ -55,7 +65,7 @@ public class Feed extends SubsystemBase{
     }
 
     public void feedFuel(){
-        setRollerRPM(3000);
+        setRollerRPM(6000);
         setFeederSpeed(6000);
     }
 
@@ -63,7 +73,7 @@ public class Feed extends SubsystemBase{
         setRollerRPM(rpm);
     }
 
-     public void stopFeed(double rpm){
+    public void stopFeed(double rpm){
         stopRoller();
         stopFeeder();
     }

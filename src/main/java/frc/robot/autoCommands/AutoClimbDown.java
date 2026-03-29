@@ -40,6 +40,6 @@ public class AutoClimbDown extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= .25;
+        return timer.get() >= .2;
     }
 }

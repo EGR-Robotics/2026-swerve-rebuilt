@@ -37,6 +37,6 @@ public class Auto_ByOutpostShot extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 9;
+        return timer.get() >= 6.5;
     }
 }

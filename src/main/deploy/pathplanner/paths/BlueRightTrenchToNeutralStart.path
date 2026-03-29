@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.0,
-        "y": 0.7894698795180717
+        "x": 4.336024096385542,
+        "y": 0.7785421686746998
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.090036144578314,
-        "y": 0.8659638554216871
+        "x": 5.4260602409638565,
+        "y": 0.8550361445783152
       },
       "isLocked": false,
-      "linkedName": "BlueRightTrenchShootStart"
+      "linkedName": "BlueRightTrenchStart"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 1.2702891566265067
       },
       "prevControl": {
-        "x": 8.106084337349397,
-        "y": 0.41792771084337466
+        "x": 7.7345421686746985,
+        "y": 0.3195783132530119
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,8 +30,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.4539419087136887,
-      "rotationDegrees": 96.60847467796178
+      "waypointRelativePos": 0.34937759336099394,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
@@ -78,7 +78,7 @@
   "folder": "Blue",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 84.7905615675722
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -9,19 +9,19 @@
       "prevControl": null,
       "nextControl": {
         "x": 8.630614457831324,
-        "y": 7.564650602409639
+        "y": 7.564650602409641
       },
       "isLocked": false,
       "linkedName": "RedRightTrenchNeutralZoneMid"
     },
     {
       "anchor": {
-        "x": 12.553662650602407,
-        "y": 7.25867469879518
+        "x": 12.203975903614458,
+        "y": 7.291457831325301
       },
       "prevControl": {
-        "x": 8.903807228915662,
-        "y": 7.2149638554216855
+        "x": 10.38997590361446,
+        "y": 7.717638554216869
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8431535269709545,
+      "waypointRelativePos": 0.46970954356846384,
       "rotationDegrees": -90.0
     }
   ],
@@ -47,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -101.70806477392064
+    "rotation": -90.39788096183462
   },
   "reversed": false,
   "folder": "Red",

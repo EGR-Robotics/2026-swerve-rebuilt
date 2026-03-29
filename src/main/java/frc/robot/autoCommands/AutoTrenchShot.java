@@ -43,6 +43,6 @@ public class AutoTrenchShot extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 8;
+        return timer.get() >= 6.5;
     }
 }

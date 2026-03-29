@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 12.750361445783133,
-        "y": 4.264481927710843
+        "x": 12.52087951807229,
+        "y": 4.614168674698795
       },
       "isLocked": false,
       "linkedName": "RedLeftTrenchNeutralZoneMidFeed"
@@ -20,8 +20,8 @@
         "y": 0.6474096385542167
       },
       "prevControl": {
-        "x": 8.324638554216868,
-        "y": -0.1503132530120469
+        "x": 8.27,
+        "y": -0.019180722891565027
       },
       "nextControl": null,
       "isLocked": false,
