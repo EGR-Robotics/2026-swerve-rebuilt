@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 16.05,
-        "y": 7.62
+        "x": 16.13795180722552,
+        "y": 7.663000000004569
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.149108433734941,
-        "y": 5.8471445783132525
+        "x": 14.23706024096046,
+        "y": 5.8901445783178215
       },
       "isLocked": false,
       "linkedName": "RedOutpostIntake"

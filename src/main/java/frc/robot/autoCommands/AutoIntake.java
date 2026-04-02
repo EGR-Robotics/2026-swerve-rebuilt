@@ -41,6 +41,6 @@ public class AutoIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 2;
+        return timer.get() >= 2.25;
     }
 }

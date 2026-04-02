@@ -62,6 +62,6 @@ public class AutoIntakePulseCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(2.0); // ends after 2 seconds
+        return timer.hasElapsed(3); // ends after 2 seconds
     }
 }

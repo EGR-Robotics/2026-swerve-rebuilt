@@ -2,15 +2,15 @@ package frc.robot.subsystems.Shooter;
 
 public class ShooterPresets {
     // Neutral zone shot - NEEDS TUNING
-    public static final double NEUTRAL_RPM = 1900;
+    public static final double NEUTRAL_RPM = 2000;
     public static final double NEUTRAL_ANGLE = 20;
 
     // Opposite alliance zone shot - NEEDS TUNING
-    public static final double OPPOSITE_RPM = 2600;
+    public static final double OPPOSITE_RPM = 2900;
     public static final double OPPOSITE_ANGLE = 25;
 
     // Center Shot in Auto - NEEDS TUNING
-    public static final double HUB_RPM = 2000;
+    public static final double HUB_RPM = 1850;
     public static final double HUB_ANGLE = 0;
 
     // // To the right of the climb, angled towards the hub
@@ -18,7 +18,7 @@ public class ShooterPresets {
     // public static final double CLIMB_RIGHT_ANGLE = 0;
 
     // Outpost, slightly forward angled towards hub - NEEDS TUNING
-    public static final double OUTPOST_AUTO_RPM = 2500;
+    public static final double OUTPOST_AUTO_RPM = 2300;
     public static final double OUTPOST_AUTO_ANGLE = 0;
 
     // Corner shot, works in outpost corner and other corner of alliance zone - NEEDS TUNING
@@ -26,7 +26,7 @@ public class ShooterPresets {
     public static final double OUTPOST_ANGLE = 0;
 
     // Shot that is slightly in front of the climb, used most of the match - NEEDS TUNING
-    public static final double HUB2_RPM = 2130;
+    public static final double HUB2_RPM = 2050;
     public static final double HUB2_ANGLE = 0;
 
     //NEW PRESETS 
@@ -36,6 +36,6 @@ public class ShooterPresets {
     public static final double UNDER_CLIMB_ANGLE = 0;
 
     // Robot slightly under trench and angled towards hub shot - NEEDS TUNING
-    public static final double TRENCH_RPM = 2200;
+    public static final double TRENCH_RPM = 2150;
     public static final double TRENCH_ANGLE = 0;
 }

@@ -113,7 +113,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
 
-    // ---------------- FIXED CONSTRUCTORS (AutoBuilder removed) ----------------
+    // ---------------- FIXED CONSTRUCTORS ----------------
 
     public CommandSwerveDrivetrain(
         SwerveDrivetrainConstants drivetrainConstants,
@@ -157,10 +157,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
+    // ---------------- FIX #1: Apply operator perspective ONCE ----------------
+
     @Override
     public void periodic() {
-        setOperatorPerspectiveForward(Rotation2d.k180deg);
-        m_hasAppliedOperatorPerspective = true;
+        if (!m_hasAppliedOperatorPerspective) {
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+                setOperatorPerspectiveForward(kRedAlliancePerspectiveRotation);
+            } else {
+                setOperatorPerspectiveForward(kBlueAlliancePerspectiveRotation);
+            }
+            m_hasAppliedOperatorPerspective = true;
+        }
     }
 
     private void startSimThread() {
@@ -207,7 +216,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-    // ---------------- AutoBuilder now called from RobotContainer ----------------
+    // ---------------- FIX #2: Correct alliance flip logic ----------------
 
     public void configureAutoBuilder() {
         try {
@@ -223,14 +232,23 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 ),
                 new PPHolonomicDriveController(
                     new PIDConstants(6.5, 0, 0),
-                    new PIDConstants(6, 0, 0)
+                    new PIDConstants(6, 0, 0.1)
                 ),
                 config,
-                () -> DriverStation.getAlliance().orElse(Alliance.Blue) != Alliance.Red,
+                () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // FIXED
                 this
             );
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
     }
+
+    public void seedFieldRelative() {
+        var currentPose = getState().Pose;
+        resetPose(new Pose2d(
+            currentPose.getTranslation(),
+            Rotation2d.fromDegrees(0)
+    ));
+}
+
 }

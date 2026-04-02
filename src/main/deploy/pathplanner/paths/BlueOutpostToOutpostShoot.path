@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.52,
-        "y": 0.45
+        "x": 0.5987469879518073,
+        "y": 0.33050602409638485
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9487494764089895,
-        "y": 0.9780964380197867
+        "x": 1.0274964643607967,
+        "y": 0.8586024621161716
       },
       "isLocked": false,
       "linkedName": "BlueOutpostIntake"
