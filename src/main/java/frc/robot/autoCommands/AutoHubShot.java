@@ -39,11 +39,11 @@ public class AutoHubShot extends Command {
         timer.stop();
 
         shooter.setFlywheelRPM(0);
-        shooter.setHoodAngle(5);
+        shooter.setHoodAngle(0);
     }
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 4;
+        return timer.get() >= 3.75;
     }
 }

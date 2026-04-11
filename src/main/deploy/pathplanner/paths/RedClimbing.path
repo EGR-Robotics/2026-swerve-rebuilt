@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5331807228915662,
-        "y": 0.37421686746987914
+        "x": 15.574,
+        "y": 4.887
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9619301993005556,
-        "y": 0.9023133054896659
+        "x": 15.823621348313281,
+        "y": 4.900754361717641
       },
       "isLocked": false,
-      "linkedName": "BlueOutpostIntake"
+      "linkedName": "RedPostClimb"
     },
     {
       "anchor": {
-        "x": 1.7570843373493976,
-        "y": 1.5871927710843363
+        "x": 16.1,
+        "y": 4.887
       },
       "prevControl": {
-        "x": 1.5285330378356539,
-        "y": 1.2842023382350884
+        "x": 15.84505385985591,
+        "y": 4.862882984363521
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BlueOutpostShoot"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 41.305012091159995
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Blue",
+  "folder": "Red",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

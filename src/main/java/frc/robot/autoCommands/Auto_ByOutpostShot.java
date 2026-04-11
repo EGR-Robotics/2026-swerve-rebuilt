@@ -35,11 +35,11 @@ public class Auto_ByOutpostShot extends Command {
         timer.stop();
         
         shooter.setFlywheelRPM(0);
-        shooter.setHoodAngle(5);
+        shooter.setHoodAngle(0);
     }
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 6.3;
+        return timer.get() >= 6.5;
     }
 }

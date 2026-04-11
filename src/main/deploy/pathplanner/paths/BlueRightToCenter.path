@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.029660689187791,
-        "y": 2.911414280434334
+        "x": 2.2925421686746983,
+        "y": 3.9912891566265065
       },
       "isLocked": false,
       "linkedName": "BlueBumpRightStart"
@@ -20,8 +20,8 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 2.071174624276893,
-        "y": 4.120330468932918
+        "x": 3.70221686746988,
+        "y": 3.0952168674698792
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,15 +34,15 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.3904012640440258
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Blue",

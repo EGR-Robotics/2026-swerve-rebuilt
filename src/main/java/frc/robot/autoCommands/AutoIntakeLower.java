@@ -22,7 +22,7 @@ public class AutoIntakeLower extends Command {
         timer.reset();
         timer.start();
 
-        // intakepivot.lowerIntake();
+         intakepivot.lowerIntake();
     }
 
     @Override

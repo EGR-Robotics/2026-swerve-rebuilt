@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 12.236759036144578,
-        "y": 0.7457590361445796
+        "x": 12.335108433734938,
+        "y": 0.7129759036144572
       },
       "prevControl": {
-        "x": 7.964024096385543,
-        "y": 0.07916867469879785
+        "x": 8.204433734939762,
+        "y": -0.030108433734940765
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RedLeftTrenchChaosStart"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
@@ -46,9 +46,9 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

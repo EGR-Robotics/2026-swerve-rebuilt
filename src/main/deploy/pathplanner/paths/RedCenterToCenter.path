@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.060946070666441,
-        "y": 3.9498951620006797
+        "x": 14.433228915662651,
+        "y": 4.00221686746988
       },
       "isLocked": false,
       "linkedName": "RedStartCenter"
@@ -20,8 +20,8 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 14.016478519271296,
-        "y": 4.017049876280508
+        "x": 12.914277108433735,
+        "y": 4.00221686746988
       },
       "nextControl": null,
       "isLocked": false,
@@ -65,21 +65,21 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.5679038158354
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Red",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.02834039496216
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

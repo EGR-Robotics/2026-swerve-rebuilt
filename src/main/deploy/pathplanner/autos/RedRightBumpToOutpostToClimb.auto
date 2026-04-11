@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RedRightTrenchToNeutralStart"
+                  "pathName": "RedRightBump"
                 }
               },
               {
@@ -37,28 +37,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "wait",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "RedRightTrenchNeutralStartToNeutralMid"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoIntake"
-                }
-              }
-            ]
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RedRightTrenchNeutralMidtoRightTrench"
+            "pathName": "RedOutpostToOutpostShoot"
           }
         },
         {
@@ -68,7 +55,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoTrenchShot"
+                  "name": "Auto_ByOutpostShot"
                 }
               },
               {
@@ -128,19 +115,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RedRightTrenchToOutpost"
+            "pathName": "RedOutpostToPreClimb"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "AutoClimbUp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RedOutpostToOutpostShoot"
+            "pathName": "RedPreClimbToPostClimb"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RedClimbing"
           }
         },
         {
@@ -148,9 +141,22 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Auto_ByOutpostShot"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoClimbDown"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoClimbDown"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -158,47 +164,27 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 0.3
+                        "name": "AutoIntakeRaise"
                       }
                     },
                     {
-                      "type": "parallel",
+                      "type": "named",
                       "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "AutoFeed"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "AutoIntakePulseCommand"
-                            }
-                          }
-                        ]
+                        "name": "AutoIntakeRaise"
                       }
                     },
                     {
-                      "type": "parallel",
+                      "type": "named",
                       "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "AutoFeed"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "AutoIntakePulseCommand"
-                            }
-                          }
-                        ]
+                        "name": "AutoIntakeRaise"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoIntakeRaise"
                       }
                     }
                   ]

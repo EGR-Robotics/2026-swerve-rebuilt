@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.336024096385542,
-        "y": 7.247746987951807
+        "x": 4.390662650602409,
+        "y": 7.291457831325301
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.106313253012048,
-        "y": 7.5974337349397585
+        "x": 6.160951807228915,
+        "y": 7.641144578313253
       },
       "isLocked": false,
       "linkedName": "BlueLeftTrenchStart"
@@ -64,9 +64,9 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

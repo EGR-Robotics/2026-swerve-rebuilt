@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RedRightTrenchToNeutralStart"
+                  "pathName": "BlueLeftTrenchToNeutralStart"
                 }
               },
               {
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RedRightTrenchNeutralStartToNeutralMid"
+                  "pathName": "BlueLeftTrenchNeutralStartToNeutralMidFeed"
                 }
               },
               {
@@ -56,19 +56,13 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "RedRightTrenchNeutralMidtoRightTrench"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoTrenchShot"
+                  "name": "AutoFeedFromNeutral"
                 }
               },
               {
@@ -78,7 +72,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.3
                       }
                     },
                     {
@@ -126,21 +120,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "RedRightTrenchToOutpost"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RedOutpostToOutpostShoot"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueLeftTrenchNeutralMidFeedToLeftTrenchCurve"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -150,7 +145,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Auto_ByOutpostShot"
+                  "name": "AutoTrenchShot"
                 }
               },
               {
@@ -211,6 +206,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Red Right Trench",
+  "folder": "Blue Left Trench",
   "choreoAuto": false
 }

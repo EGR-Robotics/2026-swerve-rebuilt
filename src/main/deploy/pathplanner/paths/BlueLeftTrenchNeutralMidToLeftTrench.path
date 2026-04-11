@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.685481927710843,
-        "y": 7.881554216867469
+        "x": 8.477626506024098,
+        "y": 7.859698795180723
       },
       "isLocked": false,
       "linkedName": "BlueLeftTrenchNeutralZoneMid"
     },
     {
       "anchor": {
-        "x": 4.336024096385542,
-        "y": 7.247746987951807
+        "x": 4.390662650602409,
+        "y": 7.291457831325301
       },
       "prevControl": {
-        "x": 5.166530120481928,
-        "y": 7.335168674698794
+        "x": 5.221168674698795,
+        "y": 7.378879518072289
       },
       "nextControl": null,
       "isLocked": false,
@@ -58,9 +58,9 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

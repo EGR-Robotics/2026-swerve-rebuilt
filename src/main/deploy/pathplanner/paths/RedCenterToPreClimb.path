@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.487867469879518,
-        "y": 3.2154216867469883
+        "x": 14.389518072289157,
+        "y": 5.007566265060241
       },
       "isLocked": false,
       "linkedName": "RedCenter"
     },
     {
       "anchor": {
-        "x": 15.515072289156628,
-        "y": 3.2154216867469883
+        "x": 15.574,
+        "y": 5.281
       },
       "prevControl": {
-        "x": 14.515072289156628,
-        "y": 3.2154216867469883
+        "x": 14.574,
+        "y": 5.281
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,9 +41,9 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -55,7 +55,7 @@
   "folder": "Red",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -178.5679038158354
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

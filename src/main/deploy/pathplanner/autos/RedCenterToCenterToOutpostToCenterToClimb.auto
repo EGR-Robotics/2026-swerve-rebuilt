@@ -39,7 +39,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -76,13 +76,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RedOutpostToCenter"
+            "pathName": "RedOutpostToOutpostShoot"
           }
         },
         {
@@ -92,7 +92,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoHubShot"
+                  "name": "Auto_ByOutpostShot"
                 }
               },
               {
@@ -102,7 +102,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -152,13 +152,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RedCenterToPreClimb"
+            "pathName": "RedOutpostToPreClimb"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AutoClimbUp"
+            "name": "AutoClimbDown"
           }
         },
         {
@@ -170,7 +170,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoClimbDown"
+            "name": "AutoClimbUp"
           }
         }
       ]

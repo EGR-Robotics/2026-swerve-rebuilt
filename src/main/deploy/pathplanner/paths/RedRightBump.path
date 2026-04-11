@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.433228915662651,
-        "y": 4.0
+        "x": 13.0,
+        "y": 6.122192771084338
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.526897543804765,
-        "y": 4.231789102638529
+        "x": 16.16903614457831,
+        "y": 7.684855421686747
       },
       "isLocked": false,
-      "linkedName": "RedCenter"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 7.663000000004569
       },
       "prevControl": {
-        "x": 15.504144578309857,
-        "y": 7.455373493980472
+        "x": 12.979843373493974,
+        "y": 6.122192771084338
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,32 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "AutoIntakeLower",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "AutoHubShot",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "AutoFeed",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "AutoIntakePulseCommand",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 2.0,

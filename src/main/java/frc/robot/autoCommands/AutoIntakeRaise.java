@@ -22,7 +22,7 @@ public class AutoIntakeRaise extends Command {
         timer.reset();
         timer.start();
 
-        // intakepivot.raiseIntake();
+         intakepivot.raiseIntake();
     }
 
     @Override

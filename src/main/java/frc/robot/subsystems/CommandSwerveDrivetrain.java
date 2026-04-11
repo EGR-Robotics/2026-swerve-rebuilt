@@ -31,25 +31,25 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import com.ctre.phoenix6.hardware.CANcoder; 
 import com.ctre.phoenix6.configs.CANcoderConfiguration; 
-import frc.robot.subsystems.Vision;
+// import frc.robot.subsystems.Vision;
 
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
-    private Vision vision;
+    // private Vision vision;
 
-    public void setVision(Vision v) {
-        this.vision = v;
-    }
+    // public void setVision(Vision v) {
+    //     this.vision = v;
+    // }
 
-    public double getYawToHub() {
-        if (vision == null) return Double.NaN;
-        return vision.getYawToHub();
-    }
+    // public double getYawToHub() {
+    //     if (vision == null) return Double.NaN;
+    //     return vision.getYawToHub();
+    // }
 
-    public double getDistanceToHub() { 
-        if (vision == null) return Double.NaN; 
-        return vision.getDistanceToHub(); 
-    }
+    // public double getDistanceToHub() { 
+    //     if (vision == null) return Double.NaN; 
+    //     return vision.getDistanceToHub(); 
+    // }
 
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
@@ -231,8 +231,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                         .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
                 ),
                 new PPHolonomicDriveController(
-                    new PIDConstants(6.5, 0, 0),
-                    new PIDConstants(6, 0, 0.1)
+                    new PIDConstants(6.5, 0, 0.5),//p:5.5 d:0.8
+                    new PIDConstants(4, 0, 0.4)//p:3.5 d:0.6
                 ),
                 config,
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // FIXED

@@ -14,15 +14,13 @@ public class IntakePulseCommand extends Command {
         this.intakepivot = intakepivot;
 
         this.sequence = Commands.sequence(
-            Commands.run(() -> intakepivot.raiseIntake(), intakepivot)
-                .withTimeout(0.35),
+            Commands.run(() -> intakepivot.raiseIntake(), intakepivot).withTimeout(0.20),
 
-            Commands.run(() -> intakepivot.lowerIntake(), intakepivot)
-                .withTimeout(0.05),
+            Commands.run(() -> intakepivot.lowerIntake(), intakepivot).withTimeout(0.12),
 
             Commands.runOnce(() -> intakepivot.stop(), intakepivot),
 
-            Commands.waitSeconds(0.2)
+            Commands.waitSeconds(0.4)
         );
 
         addRequirements(intakepivot);

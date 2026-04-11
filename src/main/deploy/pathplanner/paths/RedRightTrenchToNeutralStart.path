@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.247686746987952,
-        "y": 7.313313253012049
+        "x": 12.21490361445783,
+        "y": 7.389807228915663
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.258843373493974,
-        "y": 7.291457831325301
+        "x": 10.204204819277109,
+        "y": 7.25867469879518
       },
       "isLocked": false,
       "linkedName": "RedRightTrenchNeutralZoneEnd"
     },
     {
       "anchor": {
-        "x": 8.8054578313253,
-        "y": 6.919915662650602
+        "x": 8.750819277108434,
+        "y": 6.9308433734939765
       },
       "prevControl": {
-        "x": 9.067722891566264,
-        "y": 7.652072289156627
+        "x": 10.339096385542167,
+        "y": 7.247746987951809
       },
       "nextControl": null,
       "isLocked": false,
@@ -52,9 +52,9 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

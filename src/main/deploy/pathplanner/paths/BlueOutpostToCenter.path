@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5987469879518073,
-        "y": 0.33050602409638485
+        "x": 0.5331807228915662,
+        "y": 0.37421686746987914
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5242771084337345,
-        "y": 2.080578313253011
+        "x": 2.4587108433734937,
+        "y": 2.1242891566265056
       },
       "isLocked": false,
       "linkedName": "BlueOutpostIntake"
@@ -53,21 +53,21 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.3904012640440258
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Blue",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -0.2971043646709377
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

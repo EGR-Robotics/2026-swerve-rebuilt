@@ -4,18 +4,24 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+
 import com.ctre.phoenix6.HootAutoReplay;
 
+import edu.wpi.first.hal.MatchInfoData;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import org.littletonrobotics.junction.LoggedRobot;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
-    private RobotContainer robotContainer;
+    //private RobotContainer robotContainer;
 
     private final RobotContainer m_robotContainer;
 
@@ -25,6 +31,7 @@ public class Robot extends TimedRobot {
         .withJoystickReplay();
 
     public Robot() {
+
         m_robotContainer = new RobotContainer();
     }
 
@@ -33,13 +40,14 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
 
-        //SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+        double matchTime = DriverStation.getMatchTime();
+        SmartDashboard.putNumber("Match Time", matchTime);
     }
 
     @Override
     public void disabledInit() {
        // System.gc();
-       robotContainer.drivetrain.seedFieldRelative();
+      // robotContainer.drivetrain.seedFieldRelative();
 
     }
 

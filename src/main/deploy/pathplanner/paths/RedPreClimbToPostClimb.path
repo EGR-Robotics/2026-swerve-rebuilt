@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 15.515072289156628,
-        "y": 3.2154216867469883
+        "x": 15.574,
+        "y": 5.281
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.525210217014127,
-        "y": 3.470162601009151
+        "x": 15.5841379278575,
+        "y": 5.5357409142621625
       },
       "isLocked": false,
       "linkedName": "RedPreClimb"
     },
     {
       "anchor": {
-        "x": 15.515072289156628,
-        "y": 3.482448511967171
+        "x": 15.574,
+        "y": 4.887
       },
       "prevControl": {
-        "x": 15.506957570534706,
-        "y": 3.2325802439904487
+        "x": 15.565885281378078,
+        "y": 4.637131732023278
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "RedPostClimb"
     }
   ],
   "rotationTargets": [],
@@ -41,9 +41,9 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

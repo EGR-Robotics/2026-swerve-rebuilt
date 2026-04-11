@@ -43,10 +43,10 @@ public class AutoIntakePulseCommand extends Command {
             sequence.end(false);
 
             sequence = Commands.sequence(
-                Commands.run(() -> intakepivot.raiseIntake(), intakepivot).withTimeout(0.35),
-                Commands.run(() -> intakepivot.lowerIntake(), intakepivot).withTimeout(0.05),
+                Commands.run(() -> intakepivot.raiseIntake(), intakepivot).withTimeout(0.10),
+                Commands.run(() -> intakepivot.lowerIntake(), intakepivot).withTimeout(0.10),
                 Commands.runOnce(() -> intakepivot.stop(), intakepivot),
-                Commands.waitSeconds(0.2)
+                Commands.waitSeconds(0.3)
             );
 
             sequence.initialize();

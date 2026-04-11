@@ -27,20 +27,16 @@ public class AutoIntake extends Command {
 
     @Override
     public void execute() {
-        // if (shooter.readyToShoot()) {
-        //     shooter.setFeederSpeed(ShooterPresets.HUB_RPM);
-        // }
     }
 
     @Override
     public void end(boolean interrupted) {
         timer.stop();
-
         intake.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return timer.get() >= 2.25;
+        return timer.get() >= 2.2;
     }
 }

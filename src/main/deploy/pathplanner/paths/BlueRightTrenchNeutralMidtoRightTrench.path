@@ -8,30 +8,30 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.1609518072289156,
-        "y": -0.31422891566264965
+        "x": 8.193506024096386,
+        "y": 0.7785421686746998
       },
       "isLocked": false,
       "linkedName": "BlueRightTrenchNeutralZoneMid"
     },
     {
       "anchor": {
-        "x": 4.336024096385542,
-        "y": 0.7785421686746998
+        "x": 3.997265060240964,
+        "y": 0.7566867469879515
       },
       "prevControl": {
-        "x": 4.81410843373494,
-        "y": 0.8441084337349423
+        "x": 4.475349397590361,
+        "y": 0.8222530120481939
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BlueRightTrenchStart"
+      "linkedName": "BlueRightTrenchEnd"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.3975103734439832,
-      "rotationDegrees": 119.99999999999999
+      "rotationDegrees": 98.56114926586206
     }
   ],
   "constraintZones": [],
@@ -57,16 +57,16 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 89.23354699898908
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Blue",
@@ -74,5 +74,5 @@
     "velocity": 0,
     "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -21,13 +21,13 @@ public class Shooter extends SubsystemBase {
 
     private static final double FLYWHEEL_GEAR_RATIO = 1.0;
 
-    private static final double encoderMin = 0.25;   // hood UP
-    private static final double encoderMax = 0.5;    // hood DOWN
+    private static final double encoderMin = 1.3;   // hood UP
+    private static final double encoderMax = -0.39;    // hood DOWN
 
     public static final double min_angle = 0.0;
     public static double max_angle = 30.0;
 
-    private static final double MOTOR_ROTATIONS_AT_MAX = 2.05;
+    private static final double MOTOR_ROTATIONS_AT_MAX = 1.66;
 
     private static final double RPM_TOL = 100;
     private static final double ANGLE_TOL = 1.0;
@@ -114,7 +114,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getHoodAngle() {
-        double abs = hoodEncoder.getAbsolutePosition().getValueAsDouble();
+        double abs = hoodEncoder.getPosition().getValueAsDouble();
         return encoderToAngle(abs);
     }
 

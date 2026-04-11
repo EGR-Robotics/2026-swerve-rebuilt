@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.715127918879675,
-        "y": 7.04511702705846
+        "x": 15.321833241153653,
+        "y": 6.538844058837781
       },
       "isLocked": false,
       "linkedName": "RedOutpostIntake"
@@ -20,8 +20,8 @@
         "y": 6.613939759036145
       },
       "prevControl": {
-        "x": 15.794425021540539,
-        "y": 7.35676690469173
+        "x": 16.137805053740323,
+        "y": 7.464590967116771
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,9 +34,9 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.List;
+import java.util.HashMap;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -47,7 +48,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feed;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
-import frc.robot.subsystems.Vision;
+// import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.ShooterTable;
 
@@ -84,13 +85,12 @@ public class RobotContainer {
     public Feed feed = new Feed();
     public Intake intake = new Intake();
     public IntakePivot intakepivot = new IntakePivot();
-    public Vision vision = new Vision();
+    // public Vision vision = new Vision();
     public ShooterTable table = new ShooterTable();
 
     private SendableChooser<String> allianceChooser = new SendableChooser<>();
     private SendableChooser<String> autoChooser = new SendableChooser<>();
 
-    // ⭐ FIXED: "MandMCookie" spelling matches your switch-case
     private final List<String> redAutos = List.of(
         "ChocolateChip",
         "WhiteChocolateChip",
@@ -99,7 +99,11 @@ public class RobotContainer {
         "DoubleChocolate",
         "Oreo",
         "ChipsAhoy",
-        "NutterButter"
+        "NutterButter",
+        "SugarCookie",
+        "Gingerbread",
+        "ThinMint",
+        "TESTCOOKIE"
     );
 
     private final List<String> blueAutos = List.of(
@@ -114,6 +118,9 @@ public class RobotContainer {
         "NutterButter"
     );
 
+    // ⭐ NEW: Prebuilt autos stored here
+    private final HashMap<String, Command> builtAutos = new HashMap<>();
+
     public RobotContainer() {
         configureBindings();
         configureAutoSelectors();
@@ -127,9 +134,38 @@ public class RobotContainer {
         NamedCommands.registerCommand("AutoTrenchShot", new AutoTrenchShot(shooter));
         NamedCommands.registerCommand("AutoIntakeRaise", new AutoIntakeRaise(intakepivot));
         NamedCommands.registerCommand("AutoIntakePulseCommand", new AutoIntakePulseCommand(intakepivot));
+        NamedCommands.registerCommand("AutoClimbUp", new AutoClimbUp(climber));
+        NamedCommands.registerCommand("AutoClimbDown", new AutoClimbDown(climber));
 
         drivetrain.configureAutoBuilder();
+
+        // ⭐ NEW: Build all autos at startup
+        buildAllAutos();
     }
+
+    // ⭐ NEW: Prebuild all autos once
+    private void buildAllAutos() {
+        for (String name : redAutos) {
+            try {
+                builtAutos.put("RED_" + name, buildAutoCommand("RED", name));
+            } catch (Exception e) {
+                System.err.println("Failed to build RED auto: " + name);
+                e.printStackTrace();
+            }
+        }
+
+        for (String name : blueAutos) {
+            try {
+                builtAutos.put("BLUE_" + name, buildAutoCommand("BLUE", name));
+            } catch (Exception e) {
+                System.err.println("Failed to build BLUE auto: " + name);
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("Finished attempting to build all autos.");
+    }
+
 
     private void configureAutoSelectors() {
         allianceChooser.setDefaultOption("Red Alliance", "RED");
@@ -158,8 +194,6 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        drivetrain.setVision(vision);
-
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() -> {
 
@@ -261,22 +295,16 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
+    // ⭐ UPDATED: Now returns prebuilt autos instantly
     public Command getAutonomousCommand() {
         String alliance = allianceChooser.getSelected();
         String autoName = autoChooser.getSelected();
 
-        if (alliance == null) {
-            alliance = "RED";
-        }
+        if (alliance == null) alliance = "RED";
+        if (autoName == null) return Commands.print("No auto selected (autoName was null)");
 
-        if (autoName == null) {
-            return Commands.print("No auto selected (autoName was null)");
-        }
-
-        // Just return the auto. PathPlannerAuto handles pose reset internally.
-        return buildAutoCommand(alliance, autoName);
+        return builtAutos.get(alliance + "_" + autoName);
     }
-
 
     private Command buildAutoCommand(String alliance, String autoName) {
 
@@ -290,6 +318,10 @@ public class RobotContainer {
                 case "Oreo": return new PathPlannerAuto("RedLeftTrenchToNeutralStartToNeutralMidToLeftTrench");
                 case "ChipsAhoy": return new PathPlannerAuto("RedRightTrenchToNeutralStartToNeutralMidToRightTrench");
                 case "NutterButter": return new PathPlannerAuto("RedRightTrenchToNeutralStartToNeutralMidToRightTrenchToOutpostToOutpostShoot");
+                case "SugarCookie": return new PathPlannerAuto("RedLeftTrenchToNeutralStartToNeutralMidFeedToLeftTrenchCurve");
+                case "Gingerbread": return new PathPlannerAuto("RedLeftTrenchNeutralMidToLeftTrenchCurve");
+                case "ThinMint": return new PathPlannerAuto("RedRightBumpToOutpostToClimb");
+                case "TESTCOOKIE": return new PathPlannerAuto("RedClimb");
             }
         } else {
             switch (autoName) {
